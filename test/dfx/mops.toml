@@ -1,0 +1,2 @@
+[dependencies]
+ecdsa = "../packages/ecdsa/src"

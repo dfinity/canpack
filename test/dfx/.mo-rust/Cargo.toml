@@ -1,0 +1,9 @@
+[package]
+name = "_mo_rust"
+version = "0.0.1"
+description = "Rust bindings for Motoko"
+authors = ["DFINITY"]
+edition = "2021"
+
+[dependencies]
+ecdsa = { path = "../../packages/ecdsa/rust" }

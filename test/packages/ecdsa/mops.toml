@@ -1,0 +1,7 @@
+[package]
+name = "ecdsa"
+version = "0.0.1"
+description = "ECDSA verification"
+
+[dependencies]
+base = "0.10.2"

@@ -1,0 +1,13 @@
+{
+    "canisters": {
+        "motoko": {
+            "type": "motoko",
+            "main": "src/Main"
+        },
+        "_mo_rust": {
+            "type": "rust",
+            "package": "mo_rust",
+            "candid": ".mo-rust/service.did"
+        }
+    }
+}
