@@ -1,13 +1,19 @@
 {
     "canisters": {
-        "motoko": {
+        "service": {
+            "dependencies": ["_mo_rust"],
             "type": "motoko",
-            "main": "src/Main"
+            "main": "src/Main.mo"
         },
         "_mo_rust": {
             "type": "rust",
-            "package": "mo_rust",
+            "package": "_mo_rust",
             "candid": ".mo-rust/service.did"
+        }
+    },
+    "defaults": {
+        "build": {
+            "packtool": "npx --no ic-mops sources"
         }
     }
 }

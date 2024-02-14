@@ -1,2 +1,2 @@
 [dependencies]
-ecdsa = "../packages/ecdsa/src"
+ecdsa = "../packages/ecdsa"
