@@ -8,7 +8,8 @@
         "_mo_rust": {
             "type": "rust",
             "package": "_mo_rust",
-            "candid": ".mo-rust/service.did"
+            "candid": ".mo-rust/service.did",
+            "gzip": true
         }
     },
     "defaults": {
