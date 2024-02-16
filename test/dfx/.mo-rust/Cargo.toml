@@ -1,11 +1,15 @@
 # Generated
 
 [package]
-name = "_mo_rust"
+name = "mo_rust"
 version = "0.0.1"
 description = "Rust bindings for Motoko"
 authors = ["DFINITY"]
 edition = "2021"
 
 [dependencies]
+ic-cdk = "0.12"
+ic-cdk-macros = "0.8"
+candid = "0.10"
+
 ecdsa = { path = "../../packages/ecdsa/rust", package = "rust" }

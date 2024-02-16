@@ -1,5 +1,5 @@
 // Generated bindings
 
-import Rust "canister:_mo_rust";
+import Rust "canister:mo_rust";
 
 Rust;
