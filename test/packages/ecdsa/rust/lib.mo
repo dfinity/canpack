@@ -1,5 +1,7 @@
-// Generated bindings
+// Generated
 
-import Rust "canister:mo_rust";
-
-Rust;
+module {
+    type Bindings = {
+        ecdsa_verify : (Text, Text, Text) -> async Bool;
+    };
+};
