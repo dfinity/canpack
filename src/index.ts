@@ -10,6 +10,4 @@ export const loadConfig = async (
     return config;
 };
 
-export const canpack = async () => {
-    
-};
+export const canpack = async (config: Config) => {};
