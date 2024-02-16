@@ -7,8 +7,5 @@ description = "Rust bindings for Motoko"
 authors = ["DFINITY"]
 edition = "2021"
 
-# [workspace]
-# resolver = "2"
-
 [dependencies]
 ecdsa = { path = "../../packages/ecdsa/rust", package = "rust" }

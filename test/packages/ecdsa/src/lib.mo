@@ -1,7 +1,7 @@
 import Rust "../rust";
 
 module {
-    public func hello() : async Text {
-        await Rust.hello();
+    public func verify() : async Text {
+        await Rust.ecdsa_verify();
     };
 };
