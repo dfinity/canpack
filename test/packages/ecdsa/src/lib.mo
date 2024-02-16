@@ -1,4 +1,4 @@
-import Rust "../rust";
+// import Rust "canister:mo_rust";
 
 module {
     // public func verify() : async Text {
