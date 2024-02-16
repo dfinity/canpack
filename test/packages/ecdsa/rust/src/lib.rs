@@ -20,7 +20,6 @@ macro_rules! setup_rust_canister {
     () => {
         use std::str::FromStr;
 
-        use candid::candid_method;
         use $crate::ethers_core::types::{Address, RecoveryMessage, Signature};
 
         #[ic_cdk::query]
