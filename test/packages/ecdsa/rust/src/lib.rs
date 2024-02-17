@@ -1,6 +1,7 @@
 pub use ethers_core;
 
 #[macro_export]
+#[cfg(any(target_arch = "wasm32"))]
 macro_rules! canpack {
     () => {
         use std::str::FromStr;
