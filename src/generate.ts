@@ -134,15 +134,17 @@ export const generate = async (
             canisterConfig.parts
               .map((part, i) =>
                 TOML.stringify({
-                  [`part_${i}`]:
-                    typeof part === 'string'
-                      ? part
-                      : {
-                          ...part,
-                          path: part.path
-                            ? join('../..', part.path)
-                            : undefined,
-                        },
+                  dependencies: {
+                    [`part_${i}`]:
+                      typeof part === 'string'
+                        ? part
+                        : {
+                            ...part,
+                            path: part.path
+                              ? join('../..', part.path)
+                              : undefined,
+                          },
+                  },
                 }),
               )
               .join(''),

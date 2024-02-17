@@ -11,7 +11,7 @@ export type CanisterConfig = RustConfig;
 
 export interface RustConfig {
   type: 'rust';
-  parts: RustPart[];
+  parts: (string | RustPart)[];
 }
 
 export interface RustPart {

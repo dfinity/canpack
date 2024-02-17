@@ -65,9 +65,16 @@ import Rust "canister:motoko_rust";
 
 actor {
     public func hello(name: Text) : async Text {
-        await Rust.hello(name)
+        await Rust.canpack_example_hello(name)
     } 
 }
+```
+
+Run the following commands to build and deploy the `dfx` project on your local machine:
+
+```
+dfx start --background
+dfx deploy
 ```
 
 ## Rust Crates

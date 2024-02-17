@@ -10,34 +10,32 @@
             "type": "string"
           },
           "parts": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "path": {
-                  "type": "string"
-                },
-                "package": {
-                  "type": "string"
+            "anyOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "package": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["package"]
                 }
-              },
-              "required": [
-                "package"
-              ]
-            }
+              }
+            ]
           }
         },
-        "required": [
-          "type",
-          "parts"
-        ]
+        "required": ["type", "parts"]
       }
     },
     "git": {
       "type": "boolean"
     }
   },
-  "required": [
-    "canisters"
-  ]
+  "required": ["canisters"]
 }
