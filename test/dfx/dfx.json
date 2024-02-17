@@ -1,20 +1,20 @@
 {
-    "canisters": {
-        "service": {
-            "dependencies": ["rust"],
-            "type": "motoko",
-            "main": "src/Main.mo"
-        },
-        "rust": {
-            "type": "rust",
-            "package": "canpack",
-            "candid": ".canpack-rs/service.did",
-            "gzip": true
-        }
+  "canisters": {
+    "service": {
+      "dependencies": ["rust"],
+      "type": "motoko",
+      "main": "src/Main.mo"
     },
-    "defaults": {
-        "build": {
-            "packtool": "npx --no ic-mops sources"
-        }
+    "rust": {
+      "type": "rust",
+      "package": "canpack",
+      "candid": ".canpack-rs/service.did",
+      "gzip": true
     }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "npx --no ic-mops sources"
+    }
+  }
 }

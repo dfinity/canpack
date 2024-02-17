@@ -1,11 +1,11 @@
 import { JSONSchemaType } from 'ajv';
 
 export interface Config {
-    rust: RustConfig;
+  rust: RustConfig;
 }
 
 export interface RustConfig {
-    parts: string[];
+  parts: string[];
 }
 
 const RustConfigSchema: JSONSchemaType<Config> = require('./schemas/config.json');
