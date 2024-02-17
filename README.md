@@ -6,7 +6,7 @@
 
 ## Note
 
-This project is early in development. Please feel free to try it out, although unexpected breaking changes may occur at any point.
+This project is early in development; unannounced breaking changes may occur at any point.
 
 ## Quick Start
 
