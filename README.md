@@ -50,7 +50,7 @@ In your `dfx.json` file, configure the `"dependencies"` for the Motoko canister:
 {
     "canisters": {
         "my_project_backend": {
-        >>  "dependencies": ["my_project_backend_rust"],
+            "dependencies": ["my_project_backend_rust"],
             "main": "src/my_project_backend/main.mo",
             "type": "motoko"
         }
@@ -58,7 +58,7 @@ In your `dfx.json` file, configure the `"dependencies"` for the Motoko canister:
 }
 ```
 
-Now you can call supported Rust functions from Motoko using the following code:
+Now you can call Rust functions from Motoko using a canister import:
 
 ```motoko
 import Rust "canister:motoko_rust";
