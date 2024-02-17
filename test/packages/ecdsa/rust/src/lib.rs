@@ -1,4 +1,7 @@
+use candid::CandidType;
 pub use ethers_core;
+use ethers_core::types::RecoveryMessage;
+use serde::Deserialize;
 
 #[derive(Clone, Debug, CandidType, Deserialize)]
 pub enum Message {

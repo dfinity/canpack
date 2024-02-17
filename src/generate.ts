@@ -56,7 +56,7 @@ export const generate = async (
               (json.canisters || (json.canisters = {}))[name] = {
                 type: 'rust',
                 package: 'canpack',
-                // candid: `.canpack/rust/${name}/service.did`,
+                candid: `.canpack/${name}/service.did`,
                 gzip: true,
                 canpack: true,
               };
@@ -130,7 +130,7 @@ export const generate = async (
               .map(
                 (part, i) =>
                   `part_${i} = { path = ${JSON.stringify(
-                    part.path,
+                    join('../..', part.path), // TODO: absolute paths?
                   )}, package = ${JSON.stringify(part.package)} }`,
               )
               .join('\n'),
@@ -140,7 +140,7 @@ export const generate = async (
           [
             '// __parts__',
             canisterConfig.parts
-              .map((part, i) => `{ part_${i}::canpack!() }`)
+              .map((part, i) => `part_${i}::canpack!();`)
               .join('\n'),
           ],
         ]);
