@@ -2,7 +2,7 @@
 name = "ic-ecdsa"
 version = "0.0.1"
 description = "ECDSA bindings"
-authors = ["DFINITY"]
+authors = ["Ryan Vandersmith"]
 edition = "2021"
 
 [dependencies]

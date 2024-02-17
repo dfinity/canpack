@@ -4,8 +4,12 @@
       "type": "rust",
       "parts": [
         {
-          "path": "../packages/ecdsa/rust",
-          "package": "ic-ecdsa"
+          "package": "canpack-example-hello",
+          "path": "../packages/hello"
+        },
+        {
+          "package": "ic-ecdsa",
+          "path": "../packages/ecdsa/rust"
         }
       ]
     }

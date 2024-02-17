@@ -1,0 +1,10 @@
+[package]
+name = "canpack-example-hello"
+version = "0.0.1"
+description = "An example Rust crate with Canpack compatibility"
+authors = ["Ryan Vandersmith"]
+edition = "2021"
+
+[dependencies]
+candid = "0.10"
+ic-cdk = "0.12"

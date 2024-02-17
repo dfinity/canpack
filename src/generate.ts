@@ -132,13 +132,20 @@ export const generate = async (
           [
             '# __parts__',
             canisterConfig.parts
-              .map(
-                (part, i) =>
-                  `part_${i} = { path = ${JSON.stringify(
-                    join('../..', part.path), // TODO: absolute paths?
-                  )}, package = ${JSON.stringify(part.package)} }`,
+              .map((part, i) =>
+                TOML.stringify({
+                  [`part_${i}`]:
+                    typeof part === 'string'
+                      ? part
+                      : {
+                          ...part,
+                          path: part.path
+                            ? join('../..', part.path)
+                            : undefined,
+                        },
+                }),
               )
-              .join('\n'),
+              .join(''),
           ],
         ]);
         // .canpack/<canister>/main.rs
