@@ -6,7 +6,7 @@
 
 ## Note
 
-This project is early in development. Please feel free to try it out; just make sure to back up your files in version control in case you encounter any unexpected behavior.
+This project is early in development. Please feel free to try it out, although unexpected breaking changes may occur at any point.
 
 ## Quick Start
 
