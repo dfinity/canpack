@@ -167,10 +167,6 @@ dependencies = [
 [[package]]
 name = "canpack-example-hello"
 version = "0.0.1"
-dependencies = [
- "candid",
- "ic-cdk",
-]
 
 [[package]]
 name = "cc"
