@@ -124,6 +124,7 @@ export const generate = async (
         await copy(join(templateDirectory, 'rust'), canisterDirectory, {
           dot: true,
         });
+        // .canpack/<canister>/Cargo.toml
         await replaceInFile(join(canisterDirectory, 'Cargo.toml'), [
           ['"__package_name__"', JSON.stringify(name)],
           [
@@ -138,6 +139,7 @@ export const generate = async (
               .join('\n'),
           ],
         ]);
+        // .canpack/<canister>/src/main.rs
         await replaceInFile(join(canisterDirectory, 'src/main.rs'), [
           [
             '// __parts__',
