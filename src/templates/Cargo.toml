@@ -2,4 +2,4 @@
 
 [workspace]
 resolver = "2"
-members = __members__
+# __members__

@@ -5,8 +5,6 @@ import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 import { Config } from './config';
 import { exists } from './util';
-import replaceStream from 'replacestream';
-import through from 'through2';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
@@ -23,10 +21,11 @@ interface DfxCanister {
 const replaceInFile = async (
   path: string,
   variables: [string | RegExp, string][],
+  options?: { from: string },
 ): Promise<void> => {
-  const content = await readFile(path, 'utf8');
+  let content = await readFile(options?.from ?? path, 'utf8');
   variables.forEach(([key, value]) => {
-    content.replace(key, value);
+    content = content.replace(key, value);
   });
   await writeFile(path, content);
 };
@@ -79,18 +78,24 @@ export const generate = async (
         )
       : [];
 
+    const templateDirectory = join(__dirname, 'templates');
+
     // Cargo.toml
     const cargoTomlPath = join(directory, 'Cargo.toml');
     if (!(await exists(cargoTomlPath))) {
       changes.push('+ Cargo.toml');
-      await replaceInFile(cargoTomlPath, [
+      await replaceInFile(
+        cargoTomlPath,
         [
-          '__members__',
-          JSON.stringify(
-            rustProjects.map(([name]) => `.canpack/canisters/${name}`),
-          ),
+          [
+            '# __members__',
+            `members = ${JSON.stringify(
+              rustProjects.map(([name]) => `.canpack/${name}`),
+            )}`,
+          ],
         ],
-      ]);
+        { from: join(templateDirectory, 'Cargo.toml') },
+      );
     }
 
     // .canpack/
@@ -115,7 +120,7 @@ export const generate = async (
     if (rustProjects.length) {
       for (const [name, canisterConfig] of rustProjects) {
         const canisterDirectory = join(canpackDirectory, name);
-        await copy(join(__dirname, 'templates/rust'), canisterDirectory, {
+        await copy(join(templateDirectory, 'rust'), canisterDirectory, {
           dot: true,
         });
         await replaceInFile(join(canisterDirectory, 'Cargo.toml'), [

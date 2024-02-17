@@ -86,18 +86,6 @@
   "size-limit": [
     {
       "path": "lib/index.js"
-    },
-    {
-      "path": "packages/latest/base.json"
-    },
-    {
-      "path": "versions/latest/moc.min.js"
-    },
-    {
-      "path": "versions/latest/moc_interpreter.min.js"
-    },
-    {
-      "path": "versions/latest/didc.min.js"
     }
   ]
 }
