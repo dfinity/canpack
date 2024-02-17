@@ -2,7 +2,8 @@
   "rust": {
     "parts": [
       {
-        "path": ""
+        "path": "../packages/ecdsa/rust",
+        "package": "rust"
       }
     ]
   }

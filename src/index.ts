@@ -1,15 +1,20 @@
 import fs from 'fs/promises';
 import { Config } from './config';
+import { generateRust } from './rust';
 
-const DEFAULT_CONFIG_PATH = 'canpack.json';
-
-export const loadConfig = async (
-  path: string | undefined = undefined,
-): Promise<Config> => {
-  const config = JSON.parse(
-    await fs.readFile(path ?? DEFAULT_CONFIG_PATH, 'utf8'),
-  );
+export const loadConfig = async (path: string): Promise<Config> => {
+  const config = JSON.parse(await fs.readFile(path, 'utf8'));
   return config;
 };
 
-export const canpack = async (config: Config) => {};
+export const canpack = async (directory: string, config: Config) => {
+  if (config.rust) {
+    const changes = await generateRust(directory, config);
+    if (changes.length) {
+      console.log('* Rust');
+      changes.forEach((change) => {
+        console.log(`  ${change}`);
+      });
+    }
+  }
+};
