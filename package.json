@@ -1,6 +1,6 @@
 {
   "name": "canpack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Package multiple libraries into one ICP canister.",
   "author": "Ryan Vandersmith (https://github.com/rvanasa)",
   "license": "Apache-2.0",
