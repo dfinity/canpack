@@ -64,13 +64,9 @@
     "example": "examples"
   },
   "files": [
-    "index.js",
-    "interpreter.js",
     "src/**/*",
     "lib/**/*",
-    "contrib/**/*",
-    "versions/latest/**/*",
-    "packages/latest/**/*"
+    "common/**/*"
   ],
   "keywords": [
     "motoko",
