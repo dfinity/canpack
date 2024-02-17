@@ -4,7 +4,15 @@ import { exists } from './util';
 import { readFile, writeFile } from 'fs/promises';
 import { generateTemplateFiles } from 'generate-template-files';
 
+interface DfxJson {
+  canisters?: Record<string, DfxCanister>;
+}
+
 interface DfxCanister {
+  type?: string;
+  package?: string;
+  candid?: string;
+  gzip?: boolean;
   canpack?: boolean;
 }
 
@@ -18,12 +26,10 @@ export const generate = async (
   const dfxJsonPath = join(directory, 'dfx.json');
   if (await exists(dfxJsonPath)) {
     let changed = false;
-    const json = JSON.parse(await readFile(dfxJsonPath, 'utf8'));
+    const json = JSON.parse(await readFile(dfxJsonPath, 'utf8')) as DfxJson;
     if (json?.canisters) {
       // Remove previously added canisters
-      for (const [name, canister] of Object.entries(
-        json.canisters as DfxCanister,
-      )) {
+      for (const [name, canister] of Object.entries(json.canisters)) {
         if (canister?.canpack) {
           delete json.canisters[name];
           changed = true;
