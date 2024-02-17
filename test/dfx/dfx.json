@@ -10,7 +10,6 @@
     "mo_rust": {
       "type": "rust",
       "package": "canpack",
-      "candid": ".canpack-rust/service.did",
       "gzip": true,
       "canpack": true
     }
