@@ -128,7 +128,7 @@ export const generate = async (
         });
         // .canpack/<canister>/Cargo.toml
         await replaceInFile(join(canisterDirectory, 'Cargo.toml'), [
-          ['"__package_name__"', JSON.stringify(name)],
+          [/"__package_name__"/g, JSON.stringify(name)],
           [
             '# __parts__',
             canisterConfig.parts

@@ -6,7 +6,7 @@ version = "0.0.1"
 edition = "2021"
 
 [[bin]]
-name = "main"
+name = "__package__name__"
 path = "main.rs"
 
 [dependencies]
