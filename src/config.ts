@@ -1,6 +1,4 @@
 import { JSONSchemaType } from 'ajv';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 export interface Config {
   canisters?: Record<string, CanisterConfig>;
@@ -19,6 +17,5 @@ export interface RustPart {
   package: string;
 }
 
-export const configSchema: JSONSchemaType<Config> = JSON.parse(
-  readFileSync(join(__dirname, '../common/canpack.schema.json'), 'utf8'),
-);
+export const configSchema =
+  require('../common/canpack.schema.json') as JSONSchemaType<Config>;

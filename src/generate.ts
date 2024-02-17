@@ -81,7 +81,7 @@ export const generate = async (
         )
       : [];
 
-    const templateDirectory = join(__dirname, 'templates');
+    const templateDirectory = join(__dirname, '../common/templates');
 
     // Cargo.toml
     const cargoTomlPath = join(directory, 'Cargo.toml');
