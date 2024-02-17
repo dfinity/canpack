@@ -61,7 +61,7 @@ In your `dfx.json` file, configure the `"dependencies"` for the Motoko canister:
 Now you can call Rust functions from Motoko using a canister import:
 
 ```motoko
-import Rust "canister:motoko_rust";
+import Rust "canister:my_project_backend_rust";
 
 actor {
     public func hello(name: Text) : async Text {
