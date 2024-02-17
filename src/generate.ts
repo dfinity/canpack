@@ -56,7 +56,7 @@ export const generate = async (
             if (canisterConfig.type === 'rust') {
               (json.canisters || (json.canisters = {}))[name] = {
                 type: 'rust',
-                package: 'canpack',
+                package: name,
                 candid: `.canpack/${name}/service.did`,
                 gzip: true,
                 canpack: true,
@@ -125,6 +125,7 @@ export const generate = async (
           dot: true,
         });
         await replaceInFile(join(canisterDirectory, 'Cargo.toml'), [
+          ['"__package_name__"', JSON.stringify(name)],
           [
             '# __parts__',
             canisterConfig.parts
