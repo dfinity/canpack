@@ -1,14 +1,16 @@
 {
   "canisters": {
     "service": {
-      "dependencies": ["rust"],
+      "dependencies": [
+        "rust"
+      ],
       "type": "motoko",
       "main": "src/Main.mo"
     },
-    "rust": {
+    "mo_rust": {
       "type": "rust",
       "package": "canpack",
-      "candid": ".canpack-rs/service.did",
+      "candid": ".canpack-rust/service.did",
       "gzip": true,
       "canpack": true
     }

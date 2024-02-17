@@ -1,5 +1,3 @@
-// Generated
-
 service : {
   ecdsa_verify : (text, text, text) -> (bool);
 };

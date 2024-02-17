@@ -4,13 +4,19 @@ import { join } from 'path';
 
 export interface Config {
   canisters?: Record<string, CanisterConfig>;
+  git?: boolean;
 }
 
 export type CanisterConfig = RustConfig;
 
 export interface RustConfig {
   type: 'rust';
-  parts: string[];
+  parts: RustPart[];
+}
+
+export interface RustPart {
+  path: string;
+  package: string;
 }
 
 export const configSchema: JSONSchemaType<Config> = JSON.parse(

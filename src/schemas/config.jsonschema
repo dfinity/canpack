@@ -41,6 +41,9 @@
       "required": [
         "rust"
       ]
+    },
+    "git": {
+      "type": "boolean"
     }
   },
   "required": [

@@ -1,8 +1,11 @@
-import { Config, RustConfig } from './config';
-import { join } from 'path';
-import { exists } from './util';
 import { readFile, writeFile } from 'fs/promises';
-import { generateTemplateFiles } from 'generate-template-files';
+import { mkdirp } from 'mkdirp';
+import { join } from 'path';
+import copy from 'recursive-copy';
+import { rimraf } from 'rimraf';
+import { Config } from './config';
+import { exists } from './util';
+import replaceStream from 'replacestream';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
@@ -38,14 +41,16 @@ export const generate = async (
       if (config.canisters) {
         for (const [name, canisterConfig] of Object.entries(config.canisters)) {
           if (!(json as any)?.canisters?.[name]) {
-            (json.canisters || (json.canisters = {}))[name] = {
-              type: 'rust',
-              package: 'canpack',
-              candid: '.canpack-rs/service.did',
-              gzip: true,
-              canpack: true,
-            };
-            changed = true;
+            if (canisterConfig.type === 'rust') {
+              (json.canisters || (json.canisters = {}))[name] = {
+                type: 'rust',
+                package: 'canpack',
+                candid: '.canpack-rust/service.did',
+                gzip: true,
+                canpack: true,
+              };
+              changed = true;
+            }
           }
         }
       }
@@ -56,21 +61,71 @@ export const generate = async (
       }
     }
 
+    const rustProjects = config.canisters
+      ? Object.entries(config.canisters).filter(
+          ([, { type }]) => type === 'rust',
+        )
+      : [];
+
     // Cargo.toml
     const cargoTomlPath = join(directory, 'Cargo.toml');
     if (!(await exists(cargoTomlPath))) {
       changes.push('+ Cargo.toml');
       await writeFile(
         cargoTomlPath,
-        await readFile(join(__dirname, './templates/Cargo.toml')),
+        (
+          await readFile(join(__dirname, './templates/Cargo.toml'), 'utf8')
+        ).replace(
+          '__members__',
+          JSON.stringify(
+            rustProjects.map(([name]) => `.canpack/canisters/${name}`),
+          ),
+        ), // TODO: TOML stringify?
       );
     }
 
-    // .canpack-rs
-    const rustProjectPath = join(directory, '.canpack-rs');
-    if (!(await exists(rustProjectPath))) {
-      // ..... TODO
-      changes.push('+ .canpack-rs');
+    // .canpack/
+    const canpackDirectory = join(directory, '.canpack');
+    if (await exists(canpackDirectory)) {
+      changes.push('* .canpack');
+      await rimraf(canpackDirectory);
+    } else {
+      changes.push('+ .canpack');
+    }
+    mkdirp(canpackDirectory);
+
+    // .canpack/.gitignore
+    if (!config.git) {
+      const gitignorePath = join(canpackDirectory, '.gitignore');
+      if (!(await exists(gitignorePath))) {
+        await writeFile(gitignorePath, '**/*\n');
+      }
+    }
+
+    // .canpack/<canister>/
+    if (rustProjects.length) {
+      for (const [name, canisterConfig] of rustProjects) {
+        await copy(
+          join(__dirname, 'templates/rust'),
+          join(canpackDirectory, name),
+          {
+            dot: true,
+            transform: (src, dest, stats) =>
+              replaceStream(
+                '__cargo_toml_parts__',
+                // TODO: TOML stringify?
+                canisterConfig.parts
+                  .map(
+                    (part, i) =>
+                      `part_${i} = { path = ${JSON.stringify(
+                        part.path,
+                      )}, package = ${JSON.stringify(part.package)} }`,
+                  )
+                  .join('\n'),
+              ),
+          },
+        );
+      }
     }
   }
 
