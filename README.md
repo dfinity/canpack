@@ -41,7 +41,7 @@ Define a Rust canister named `my_project_backend_rust` in your `canpack.json` fi
 Next, run the following command in this directory to generate all necessary files: 
 
 ```bash
-npx canpack@latest
+npx canpack
 ```
 
 In your `dfx.json` file, configure the `"dependencies"` for the Motoko canister:
