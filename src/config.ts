@@ -20,5 +20,5 @@ export interface RustPart {
 }
 
 export const configSchema: JSONSchemaType<Config> = JSON.parse(
-  readFileSync(join(__dirname, 'schemas/config.schema.json'), 'utf8'),
+  readFileSync(join(__dirname, '../schemas/config.schema.json'), 'utf8'),
 );
