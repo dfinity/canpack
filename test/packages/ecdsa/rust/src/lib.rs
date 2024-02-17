@@ -16,7 +16,7 @@ impl From<Message> for RecoveryMessage {
 }
 
 #[macro_export]
-macro_rules! setup_rust_canister {
+macro_rules! canpack {
     () => {
         use std::str::FromStr;
 
@@ -24,7 +24,11 @@ macro_rules! setup_rust_canister {
 
         #[ic_cdk::query]
         #[candid_method(query)]
-        pub fn ecdsa_verify(eth_address: String, message: $crate::Message, signature: String) -> bool {
+        pub fn ecdsa_verify(
+            eth_address: String,
+            message: $crate::Message,
+            signature: String,
+        ) -> bool {
             Signature::from_str(&signature)
                 .unwrap()
                 .verify(

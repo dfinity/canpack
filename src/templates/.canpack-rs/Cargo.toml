@@ -12,4 +12,4 @@ ic-cdk = "0.12"
 ic-cdk-macros = "0.8"
 candid = "0.10"
 
-dependency_0_ecdsa = { path = "../../packages/ecdsa/rust", package = "rust" }
+part_0 = { path = "../../packages/ecdsa/rust", package = "rust" }

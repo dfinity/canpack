@@ -1,7 +1,7 @@
 // Generated
 
 {
-    dependency_0_ecdsa::setup_rust_canister!();
+    part_0::canpack!();
 }
 
 #[cfg(not(any(target_arch = "wasm32", test)))]

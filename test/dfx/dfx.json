@@ -1,9 +1,7 @@
 {
   "canisters": {
     "service": {
-      "dependencies": [
-        "rust"
-      ],
+      "dependencies": ["rust"],
       "type": "motoko",
       "main": "src/Main.mo"
     },
@@ -17,7 +15,7 @@
   },
   "defaults": {
     "build": {
-      "packtool": "npx --no ic-mops sources"
+      "packtool": "mops sources"
     }
   }
 }
