@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "canisters": {
+      "type": "object",
+      "properties": {
+        "rust": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "parts": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "package": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "package"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "parts"
+          ]
+        }
+      },
+      "required": [
+        "rust"
+      ]
+    }
+  },
+  "required": [
+    "canisters"
+  ]
+}

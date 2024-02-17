@@ -1,10 +1,13 @@
 {
-  "rust": {
-    "parts": [
-      {
-        "path": "../packages/ecdsa/rust",
-        "package": "rust"
-      }
-    ]
+  "canisters": {
+    "rust": {
+      "type": "rust",
+      "parts": [
+        {
+          "path": "../packages/ecdsa/rust",
+          "package": "rust"
+        }
+      ]
+    }
   }
 }

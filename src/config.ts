@@ -3,14 +3,16 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 export interface Config {
-  rust: RustConfig;
+  canisters?: Record<string, CanisterConfig>;
 }
 
+export type CanisterConfig = RustConfig;
+
 export interface RustConfig {
-  canister?: string;
+  type: 'rust';
   parts: string[];
 }
 
 export const configSchema: JSONSchemaType<Config> = JSON.parse(
-  readFileSync(join(__dirname, '../schemas/config.json'), 'utf8'),
+  readFileSync(join(__dirname, '../schemas/config.jsonschema'), 'utf8'),
 );

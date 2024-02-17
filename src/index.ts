@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { Config } from './config';
-import { generateRust } from './rust';
+import { generate } from './generate';
 
 export const loadConfig = async (path: string): Promise<Config> => {
   const config = JSON.parse(await fs.readFile(path, 'utf8'));
@@ -8,12 +8,11 @@ export const loadConfig = async (path: string): Promise<Config> => {
 };
 
 export const canpack = async (directory: string, config: Config) => {
-  if (config.rust) {
-    const changes = await generateRust(directory, config);
+  if (config.canisters) {
+    const changes = await generate(directory, config);
     if (changes.length) {
-      console.log('* Rust');
       changes.forEach((change) => {
-        console.log(`  ${change}`);
+        console.log(change);
       });
     }
   }
