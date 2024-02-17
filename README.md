@@ -31,7 +31,8 @@ Define a Rust canister named `my_project_backend_rust` in your `canpack.json` fi
         "my_project_backend_rust": {
             "type": "rust",
             "parts": [{
-                "package": "canpack-example-hello"
+                "package": "canpack-example-hello",
+                "version": "^0.0.1"
             }]
         }
     }
