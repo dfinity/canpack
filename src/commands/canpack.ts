@@ -4,7 +4,7 @@ import { canpack, loadConfig } from '..';
 
 const { version, directory } = program
   .name('canpack')
-  .option('-D, --directory <directory>', `directory`)
+  .option('-D, --directory <directory>', `directory`, '.')
   .option('-V, --version', `show installed version`)
   .parse()
   .opts();
@@ -15,7 +15,7 @@ if (version) {
 }
 
 (async () => {
-  const config = await loadConfig(join(directory || '.', 'canpack.json'));
+  const config = await loadConfig(join(directory, 'canpack.json'));
 
   await canpack(directory, config);
 })();
