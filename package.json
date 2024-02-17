@@ -9,6 +9,10 @@
   "bin": {
     "canpack": "bin/canpack.js"
   },
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/rvanasa/canpack.git"
+  },
   "scripts": {
     "start": "ts-node src/commands/canpack",
     "build": "rimraf ./lib && tsc -p .",
