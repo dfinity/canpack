@@ -3,8 +3,6 @@
 [package]
 name = "__package_name__"
 version = "0.0.1"
-description = "Rust bindings for Motoko"
-authors = ["DFINITY"]
 edition = "2021"
 
 [dependencies]
