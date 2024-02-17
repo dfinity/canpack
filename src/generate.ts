@@ -118,7 +118,6 @@ export const generate = async (
         await copy(join(__dirname, 'templates/rust'), canisterDirectory, {
           dot: true,
         });
-        console.log()/////
         await replaceInFile(join(canisterDirectory, 'Cargo.toml'), [
           [
             '# __parts__',
