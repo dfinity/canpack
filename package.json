@@ -1,7 +1,7 @@
 {
   "name": "canpack",
   "version": "0.0.1",
-  "description": "Package multiple Rust libraries into an ICP canister.",
+  "description": "Package multiple libraries into one ICP canister.",
   "author": "Ryan Vandersmith (https://github.com/rvanasa)",
   "license": "Apache-2.0",
   "main": "lib/index.js",

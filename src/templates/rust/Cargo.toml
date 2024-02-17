@@ -5,6 +5,14 @@ name = "__package_name__"
 version = "0.0.1"
 edition = "2021"
 
+[lib]
+path = "lib.rs"
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+opt-level = "z"
+
 [dependencies]
 ic-cdk = "0.12"
 ic-cdk-macros = "0.8"

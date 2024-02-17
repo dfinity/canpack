@@ -141,8 +141,8 @@ export const generate = async (
               .join('\n'),
           ],
         ]);
-        // .canpack/<canister>/src/main.rs
-        await replaceInFile(join(canisterDirectory, 'src/main.rs'), [
+        // .canpack/<canister>/lib.rs
+        await replaceInFile(join(canisterDirectory, 'lib.rs'), [
           [
             '// __parts__',
             canisterConfig.parts
