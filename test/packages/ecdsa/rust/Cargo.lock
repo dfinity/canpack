@@ -544,6 +544,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "ic-ecdsa"
+version = "0.0.1"
+dependencies = [
+ "candid",
+ "ethers-core",
+ "getrandom",
+ "hex",
+ "ic-cdk",
+ "ic-cdk-macros",
+ "serde",
+]
+
+[[package]]
 name = "ic0"
 version = "0.21.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1005,19 +1018,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "rust"
-version = "0.0.1"
-dependencies = [
- "candid",
- "ethers-core",
- "getrandom",
- "hex",
- "ic-cdk",
- "ic-cdk-macros",
- "serde",
 ]
 
 [[package]]

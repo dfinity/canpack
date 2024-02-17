@@ -22,7 +22,6 @@
                 }
               },
               "required": [
-                "path",
                 "package"
               ]
             }

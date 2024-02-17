@@ -1,5 +1,5 @@
 [package]
-name = "rust"
+name = "ic-ecdsa"
 version = "0.0.1"
 description = "ECDSA bindings"
 authors = ["DFINITY"]

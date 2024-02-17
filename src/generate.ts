@@ -5,6 +5,7 @@ import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 import { Config } from './config';
 import { exists } from './util';
+import TOML from '@iarna/toml';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
@@ -89,9 +90,9 @@ export const generate = async (
         [
           [
             '# __members__',
-            `members = ${JSON.stringify(
-              rustProjects.map(([name]) => `.canpack/${name}`),
-            )}`,
+            `${TOML.stringify({
+              members: rustProjects.map(([name]) => `.canpack/${name}`),
+            }).trim()}`,
           ],
         ],
         { from: join(templateDirectory, 'Cargo.toml') },

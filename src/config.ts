@@ -15,7 +15,7 @@ export interface RustConfig {
 }
 
 export interface RustPart {
-  path: string;
+  path?: string;
   package: string;
 }
 

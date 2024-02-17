@@ -30,7 +30,7 @@
     "mkdirp": "^3.0.1",
     "recursive-copy": "^2.0.14",
     "rimraf": "^5.0.5",
-    "toml": "^3.0.0"
+    "@iarna/toml": "2.2.5"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.2.4",

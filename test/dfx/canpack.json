@@ -5,7 +5,7 @@
       "parts": [
         {
           "path": "../packages/ecdsa/rust",
-          "package": "rust"
+          "package": "ic-ecdsa"
         }
       ]
     }
