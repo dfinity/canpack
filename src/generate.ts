@@ -7,6 +7,8 @@ import { Config } from './config';
 import { exists } from './util';
 import TOML from '@iarna/toml';
 
+import execa = require('execa');
+
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
 }
@@ -148,6 +150,19 @@ export const generate = async (
               .join('\n'),
           ],
         ]);
+      }
+
+      // .canpack/<canister>/service.did
+      // TODO: possibly replace with a different approach
+      for (const [name, canisterConfig] of rustProjects) {
+        changes.push(`* .canpack/${name}/service.did`);
+        const result = await execa('cargo', ['run', '--package', name], {
+          cwd: directory,
+        });
+        await writeFile(
+          join(canpackDirectory, name, 'service.did'),
+          result.stdout,
+        );
       }
     }
   }
