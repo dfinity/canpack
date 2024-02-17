@@ -29,3 +29,6 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - name: Test dfx directory
+      run: |
+        npm run build && bin/canpack.js -D tests/dfx
