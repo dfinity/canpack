@@ -3,6 +3,7 @@ name = "canpack-example-hello"
 version = "0.0.1"
 description = "An example Rust crate with Canpack compatibility"
 authors = ["Ryan Vandersmith"]
+license = "Apache-2.0"
 edition = "2021"
 
 [dependencies]
