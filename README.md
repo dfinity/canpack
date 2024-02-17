@@ -84,13 +84,17 @@ Add Canpack support to any IC Wasm-compatible Rust crate by exporting a top-leve
 For example (in your `lib.rs` file):
 
 ```rust
+pub fn hello(name: String) -> String {
+    format!("Hello, {name}!")
+}
+
 #[macro_export]
 macro_rules! canpack {
     () => {
         #[ic_cdk::query]
         #[candid::candid_method(query)]
-        pub fn canpack_example_hello(name: String) -> String {
-            format!("Hello, {name}!")
+        fn canpack_example_hello(name: String) -> String {
+            $crate::hello(name)
         }
     };
 }

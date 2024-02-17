@@ -9,7 +9,7 @@ macro_rules! canpack {
 
         #[ic_cdk::query]
         #[candid::candid_method(query)]
-        pub fn ecdsa_verify(eth_address: String, message: String, signature: String) -> bool {
+        fn ecdsa_verify(eth_address: String, message: String, signature: String) -> bool {
             Signature::from_str(&signature)
                 .unwrap()
                 .verify(
