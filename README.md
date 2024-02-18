@@ -1,19 +1,15 @@
 # `canpack` &nbsp;[![npm version](https://img.shields.io/npm/v/canpack.svg?logo=npm)](https://www.npmjs.com/package/canpack) [![GitHub license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-> #### Package multiple libraries into one [ICP](https://internetcomputer.org/) canister.
+Canpack is a code generation tool which simplifies cross-language communication in [Internet Computer](https://internetcomputer.org/) canisters (such as calling a [Rust](https://www.rust-lang.org/) crate from [Motoko](https://github.com/dfinity/motoko)).
 
-`canpack` is a code generation tool which makes it easier to use [Rust](https://www.rust-lang.org/) crates in different languages (such as [Motoko](https://github.com/dfinity/motoko)) on the [Internet Computer](https://internetcomputer.org/).
-
-## Note
-
-This project is early in development; unannounced breaking changes may occur at any point.
+**Note:** This project is early in development; unannounced breaking changes may occur at any time.
 
 ## Prerequisites
 
 Ensure that the following software is installed on your system:
 * [`dfx`](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
-* [Rust](https://www.rust-lang.org/tools/install) (stable or nightly)
-* [Node.js](https://nodejs.org/en) `>= 16.x`
+* [Rust](https://www.rust-lang.org/tools/install) `>= 1.71`
+* [Node.js](https://nodejs.org/en) `>= 16`
 
 ## Quick Start (Mops)
 
