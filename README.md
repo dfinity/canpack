@@ -4,12 +4,18 @@ Canpack is a code generation tool which simplifies cross-language communication 
 
 **Note:** This project is early in development; unannounced breaking changes may occur at any time.
 
-## Prerequisites
+## Installation
 
 Ensure that the following software is installed on your system:
 * [`dfx`](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
 * [Rust](https://www.rust-lang.org/tools/install) `>= 1.71`
 * [Node.js](https://nodejs.org/en) `>= 16`
+
+Run the following command to install the Canpack CLI on your global system path:
+
+```
+npm install -g canpack
+```
 
 ## Quick Start (Mops)
 
@@ -26,7 +32,7 @@ custom-package = { path = "path/to/custom-package" }
 Next, run the following command in the directory with the `mops.toml` and `dfx.json` files.
 
 ```bash
-npx canpack
+canpack
 ```
 
 This will configure and generate a `motoko_rust` canister with Candid bindings for the specified dependencies.
@@ -37,7 +43,7 @@ Any Rust crate with Canpack compatibility can be specified as a standard [Cargo.
 
 Canpack is primarily intended as a low-level building block for use in package managers and other development tools. 
 
-Add the `canpack` npm package to your Node.js project with the following command:
+Add the `canpack` dependency to your Node.js project with the following command:
 
 ```bash
 npm i --save canpack
@@ -66,11 +72,13 @@ await canpack(directory, config);
 
 ## Advanced Usage
 
-To create a new Motoko project, run `dfx new my_project`, selecting "Motoko" for the backend and "No frontend canister" for the frontend. Once complete, run `cd my_project` and open in your editor of choice. 
+Below is a step-by-step guide for setting up a `dfx` project with a `canpack.json` config file. The goal here is to illustrate how one could use Canpack without additional tools such as Mops, which is specific to the Motoko ecosystem. 
 
-Add a new file named `canpack.json` (in the same directory as `dfx.json`). 
+Run `dfx new my_project`, selecting "Motoko" for the backend and "No frontend canister" for the frontend. Once complete, run `cd my_project` and open in your editor of choice. 
 
-Define a Rust canister named `my_project_backend_rust` in your `canpack.json` file:
+Add a new file named `canpack.json` in the same directory as `dfx.json`. 
+
+In the `canpack.json` file, define a Rust canister named `my_project_backend_rust`:
 
 ```json
 {
@@ -89,7 +97,7 @@ Define a Rust canister named `my_project_backend_rust` in your `canpack.json` fi
 Next, run the following command in this directory to generate all necessary files: 
 
 ```bash
-npx canpack
+canpack
 ```
 
 In your `dfx.json` file, configure the `"dependencies"` for the Motoko canister:
@@ -129,7 +137,7 @@ dfx deploy
 
 Add Canpack support to any IC Wasm-compatible Rust crate by exporting a top-level `canpack!` macro. 
 
-For example (in your `lib.rs` file):
+For example, here is the implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/0.0.1/src/canpack_example_hello/lib.rs.html) crate:
 
 ```rust
 pub fn hello(name: String) -> String {
@@ -145,5 +153,14 @@ macro_rules! canpack {
             $crate::hello(name)
         }
     };
+}
+```
+
+This is currently a low-level API; we may eventually support a more concise syntax such as the following:
+
+```rust
+#[canpack(query)]
+pub fn canpack_example_hello(name: String) -> String {
+    format!("Hello, {name}!")
 }
 ```
