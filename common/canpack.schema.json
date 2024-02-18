@@ -17,11 +17,12 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "path": {
-                      "type": "string"
-                    },
-                    "package": {
-                      "type": "string"
+                    "path": { "type": "string" },
+                    "package": { "type": "string" },
+                    "version": { "type": "string" },
+                    "features": {
+                      "type": "array",
+                      "items": { "type": "string" }
                     }
                   },
                   "required": ["package"]
