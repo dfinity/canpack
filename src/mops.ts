@@ -21,6 +21,7 @@ export const loadMopsCanisters = async (
     return;
   }
   const mopsToml: MopsConfig = TOML.parse(await readFile(mopsTomlPath, 'utf8'));
+  const canisters: Record<string, CanisterConfig> = {};
   if (mopsToml?.['rust-dependencies']) {
     const rustConfig: RustConfig = { type: 'rust', parts: [] };
     Object.entries(mopsToml['rust-dependencies']).forEach(([name, value]) => {
@@ -29,8 +30,7 @@ export const loadMopsCanisters = async (
         ...(typeof value === 'string' ? { version: value } : value),
       });
     });
-    return {
-      motoko_rust: rustConfig,
-    };
+    canisters['motoko_rust'] = rustConfig;
   }
+  return canisters;
 };
