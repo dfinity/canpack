@@ -21,15 +21,15 @@ npm install -g canpack
 
 Canpack has built-in support for the [Mops](https://mops.one/) package manager. 
 
-In your `mops.toml` file, add a `rust-dependencies` section:
+In your canister's `mops.toml` file, add a `rust-dependencies` section:
 
 ```toml
 [rust-dependencies]
 canpack-example-hello = "^0.0.1"
-custom-package = { path = "path/to/custom-package" }
+local-crate = { path = "path/to/local-crate" }
 ```
 
-Next, run the following command in the directory with the `mops.toml` and `dfx.json` files.
+Next, run the following command in the directory with the `mops.toml` and `dfx.json` files:
 
 ```bash
 canpack
@@ -37,7 +37,7 @@ canpack
 
 This will configure and generate a `motoko_rust` canister with Candid bindings for the specified dependencies.
 
-Any Rust crate with Canpack compatibility can be specified as a standard [Cargo.toml dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). See the [Rust Crates](#rust-crates) section for more details.
+Any Rust crate with Canpack compatibility can be specified as a standard [`Cargo.toml` dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). See the [Rust Crates](#rust-crates) section for more details.
 
 ## Programmatic API
 
@@ -160,7 +160,7 @@ This is currently a low-level API; we may eventually support a more concise synt
 
 ```rust
 #[canpack(query)]
-pub fn canpack_example_hello(name: String) -> String {
+pub fn hello(name: String) -> String {
     format!("Hello, {name}!")
 }
 ```
