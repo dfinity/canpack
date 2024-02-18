@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "crates/canpack",
+    "crates/canpack-example-hello",
+    "crates/canpack-macros",
+]

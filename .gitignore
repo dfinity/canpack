@@ -1,6 +1,9 @@
 node_modules/
-.dfx
-.mops
-.vessel
+target/
+.dfx/
+.mops/
+.vessel/
 
-/lib
+/lib/
+
+/Cargo.lock
