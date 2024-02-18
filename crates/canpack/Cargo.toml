@@ -7,3 +7,4 @@ license = "Apache-2.0"
 edition = "2021"
 
 [dependencies]
+canpack-macros = { version = "0.0.1", path = "../canpack-macros" }

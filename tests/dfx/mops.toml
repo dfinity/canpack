@@ -3,5 +3,5 @@ base = "0.10.4"
 # ecdsa = "../packages/ecdsa"
 
 [rust-dependencies]
-canpack-example-hello = "^0.0.1"
+canpack-example-hello = { path = "../../crates/canpack-example-hello" }
 ic-ecdsa = { path = "../packages/ecdsa/rust" }

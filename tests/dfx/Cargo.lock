@@ -165,10 +165,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "canpack-example-hello"
+name = "canpack"
 version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7ce7ac07ef4526f3b3e6a5f8b6aaee272a1305c77030853ec56eff74c33ed17"
+dependencies = [
+ "canpack-macros",
+]
+
+[[package]]
+name = "canpack-example-hello"
+version = "0.0.2"
+dependencies = [
+ "canpack",
+]
+
+[[package]]
+name = "canpack-macros"
+version = "0.0.1"
+dependencies = [
+ "quote",
+ "syn 2.0.48",
+]
 
 [[package]]
 name = "cc"
@@ -554,6 +570,7 @@ name = "ic-ecdsa"
 version = "0.0.1"
 dependencies = [
  "candid",
+ "canpack",
  "ethers-core",
  "getrandom",
  "hex",

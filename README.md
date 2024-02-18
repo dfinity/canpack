@@ -137,7 +137,28 @@ dfx deploy
 
 Add Canpack support to any IC Wasm-compatible Rust crate by exporting a top-level `canpack!` macro. 
 
-For example, here is the implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/0.0.1/src/canpack_example_hello/lib.rs.html) crate:
+For example, here is the implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) crate:
+
+```rust
+canpack::export! {
+    pub fn canpack_example_hello(name: String) -> String {
+        format!("Hello, {name}!")
+    }
+}
+```
+
+Configure the Candid method using a `canpack` attribute:
+
+```rust
+canpack::export! {
+    #[canpack(update, rename = "canpack_example_hello")]
+    pub fn hello(name: String) -> String {
+        format!("Hello, {name}!")
+    }
+}
+```
+
+It's also possible to manually define Candid methods by exporting a `canpack!` macro:
 
 ```rust
 pub fn hello(name: String) -> String {
@@ -153,14 +174,5 @@ macro_rules! canpack {
             $crate::hello(name)
         }
     };
-}
-```
-
-This is currently a low-level API; we may eventually support a more concise syntax such as the following:
-
-```rust
-#[canpack(query)]
-pub fn hello(name: String) -> String {
-    format!("Hello, {name}!")
 }
 ```
