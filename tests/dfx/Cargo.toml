@@ -6,4 +6,4 @@ opt-level = "s"
 
 [workspace]
 resolver = "2"
-members = [ ".canpack/mo_rust" ]
+members = [ ".canpack/motoko_rust" ]
