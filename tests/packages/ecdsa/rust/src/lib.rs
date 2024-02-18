@@ -3,8 +3,8 @@ use std::str::FromStr;
 use ethers_core::types::{Address, RecoveryMessage, Signature};
 
 canpack::export! {
-    // #[canpack(query, rename = "ecdsa_verify")]
-    pub fn ecdsa_verify(eth_address: String, message: String, signature: String) -> bool {
+    #[canpack(query, rename = "ecdsa_verify")]
+    pub fn verify(eth_address: String, message: String, signature: String) -> bool {
         Signature::from_str(&signature)
             .unwrap()
             .verify(
