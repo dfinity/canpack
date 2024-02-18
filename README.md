@@ -23,7 +23,15 @@ canpack-example-hello = "^0.0.1"
 custom-package = { path = "path/to/custom-package" }
 ```
 
-Run `canpack` in the directory with the `mops.toml` and `dfx.json` files to generate a `motoko_rust` canister with the specified dependencies.
+Next, run the following command in the directory with the `mops.toml` and `dfx.json` files.
+
+```bash
+npx canpack
+```
+
+This will configure and generate a `motoko_rust` canister with Candid bindings for the specified dependencies.
+
+Any Rust crate with Canpack compatibility can be specified as a standard [Cargo.toml dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). See the [Rust Crates](#rust-crates) section for more details.
 
 ## Programmatic API
 
