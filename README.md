@@ -12,6 +12,37 @@ This project is early in development; unannounced breaking changes may occur at 
 
 TODO: Gitpod URL
 
+## Programmatic API
+
+Canpack is primarily intended as a low-level building block for use in package managers and other development tools. 
+
+Add the `canpack` npm package to your Node.js project with the following command:
+
+```bash
+npm i --save canpack
+```
+
+The following example JavaScript code runs Canpack in the current working directory:
+
+```js
+import { canpack } from 'canpack';
+
+const directory = '.';
+const config = {
+    canisters: {
+        my_canister: {
+            type: 'rust',
+            parts: [{
+                package: 'canpack-example-hello',
+                version: '^0.0.1',
+            }]
+        }
+    }
+};
+
+await canpack(directory, config);
+```
+
 ## Manual Setup
 
 Ensure that the following software is installed on your system:
