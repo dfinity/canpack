@@ -8,9 +8,26 @@
 
 This project is early in development; unannounced breaking changes may occur at any point.
 
-## Quick Start
+## Prerequisites
 
-TODO: Gitpod URL
+Ensure that the following software is installed on your system:
+* [`dfx`](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
+* [Rust](https://www.rust-lang.org/tools/install) (stable or nightly)
+* [Node.js](https://nodejs.org/en) `>= 16.x`
+
+## Quick Start (Mops)
+
+Canpack has built-in support for the [Mops](https://mops.one/) package manager. 
+
+In your `mops.toml` file, add a `rust-dependencies` section:
+
+```toml
+[rust-dependencies]
+canpack-example-hello = "^0.0.1"
+custom-package = { path = "path/to/custom-package" }
+```
+
+Run `canpack` in the directory with the `mops.toml` and `dfx.json` files to generate a `motoko_rust` canister with the specified dependencies.
 
 ## Programmatic API
 
@@ -43,12 +60,7 @@ const config = {
 await canpack(directory, config);
 ```
 
-## Manual Setup
-
-Ensure that the following software is installed on your system:
-* [`dfx`](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
-* [Rust](https://www.rust-lang.org/tools/install) (stable or nightly)
-* [Node.js](https://nodejs.org/en) `>= 16.x`
+## Advanced Usage
 
 To create a new Motoko project, run `dfx new my_project`, selecting "Motoko" for the backend and "No frontend canister" for the frontend. Once complete, run `cd my_project` and open in your editor of choice. 
 

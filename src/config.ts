@@ -9,12 +9,14 @@ export type CanisterConfig = RustConfig;
 
 export interface RustConfig {
   type: 'rust';
-  parts: (string | RustPart)[];
+  parts: (string | RustDependency)[];
 }
 
-export interface RustPart {
-  path?: string;
+export interface RustDependency {
   package: string;
+  version?: string;
+  path?: string;
+  git?: string;
 }
 
 export const configSchema =

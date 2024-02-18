@@ -1,3 +1,7 @@
 [dependencies]
 base = "0.10.4"
-ecdsa = "../packages/ecdsa"
+# ecdsa = "../packages/ecdsa"
+
+[rust-dependencies]
+canpack-example-hello = "^0.0.1"
+ic-ecdsa = { path = "../packages/ecdsa/rust" }

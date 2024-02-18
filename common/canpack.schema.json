@@ -37,6 +37,5 @@
     "git": {
       "type": "boolean"
     }
-  },
-  "required": ["canisters"]
+  }
 }

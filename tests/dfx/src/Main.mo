@@ -1,4 +1,4 @@
-import Rust "canister:mo_rust";
+import Rust "canister:motoko_rust";
 
 import Blob "mo:base/Blob";
 
