@@ -13,7 +13,7 @@
     "declarationDir": "lib",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
+      "*": ["src/types/*"]
     }
   },
   "include": ["src/**/*"]
