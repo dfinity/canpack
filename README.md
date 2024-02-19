@@ -135,11 +135,9 @@ dfx deploy
 
 ## Rust Crates
 
-It's relatively easy to add Canpack support to any IC Wasm-compatible Rust crate.
+It's relatively simple to add Canpack support to any IC Wasm-compatible Rust crate.
 
-First, add [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file.
-
-Here is the full implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) crate:
+Here is the full implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) package:
 
 ```rust
 canpack::export! {
@@ -149,7 +147,7 @@ canpack::export! {
 }
 ```
 
-Configure the Candid method using a `canpack` attribute:
+Configure the Candid method using a `#[canpack]` attribute:
 
 ```rust
 canpack::export! {
@@ -160,7 +158,7 @@ canpack::export! {
 }
 ```
 
-It's also possible to manually define Candid methods by exporting a `canpack!` macro:
+This shorthand requires adding [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file. It's also possible to manually define Candid methods by exporting a `canpack!` macro:
 
 ```rust
 pub fn hello(name: String) -> String {
