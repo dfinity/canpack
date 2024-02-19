@@ -1,6 +1,6 @@
 [package]
 name = "canpack-example-hello"
-version = "0.0.2"
+version = "0.1.0"
 description = "An example Rust crate with Canpack compatibility"
 authors = ["Ryan Vandersmith"]
 license = "Apache-2.0"

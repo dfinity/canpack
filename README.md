@@ -25,7 +25,7 @@ In your canister's `mops.toml` file, add a `rust-dependencies` section:
 
 ```toml
 [rust-dependencies]
-canpack-example-hello = "^0.0.1"
+canpack-example-hello = "^0.1"
 local-crate = { path = "path/to/local-crate" }
 ```
 
@@ -61,7 +61,7 @@ const config = {
             type: 'rust',
             parts: [{
                 package: 'canpack-example-hello',
-                version: '^0.0.1',
+                version: '^0.1',
             }]
         }
     }
@@ -87,7 +87,7 @@ In the `canpack.json` file, define a Rust canister named `my_project_backend_rus
             "type": "rust",
             "parts": [{
                 "package": "canpack-example-hello",
-                "version": "^0.0.1"
+                "version": "^0.1"
             }]
         }
     }
