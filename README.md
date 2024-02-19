@@ -147,18 +147,34 @@ canpack::export! {
 }
 ```
 
-Configure the Candid method using a `#[canpack]` attribute:
+If needed, you can configure the generated Candid method using a `#[canpack]` attribute:
 
 ```rust
 canpack::export! {
-    #[canpack(update, rename = "canpack_example_hello")]
+    #[canpack(composite_query, rename = "canpack_example_hello")]
     pub fn hello(name: String) -> String {
         format!("Hello, {name}!")
     }
 }
 ```
 
-This shorthand requires adding [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file. It's also possible to manually define Candid methods by exporting a `canpack!` macro:
+Note that it is possible to reference local constants, methods, etc.
+
+```rust
+const WELCOME: &str = "Welcome";
+
+fn hello(salutation: &str, name: String) -> String {
+    format!("{salutation}, {name}!")
+}
+
+canpack::export! {
+    pub fn canpack_example_hello(name: String) -> String {
+        hello(WELCOME, name)
+    }
+}
+```
+
+The `canpack::export!` shorthand requires adding [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file. It's also possible to manually define Candid methods by exporting a `canpack!` macro:
 
 ```rust
 pub fn hello(name: String) -> String {
