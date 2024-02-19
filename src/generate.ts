@@ -2,15 +2,22 @@ import TOML from '@iarna/toml';
 import { execa } from 'execa';
 import { readFile, writeFile } from 'fs/promises';
 import { mkdirp } from 'mkdirp';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 import { Config } from './config.js';
 import { Options } from './index.js';
 import { exists, moduleRelative } from './util.js';
+import chalk from 'chalk';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
+}
+
+interface CargoToml {
+  workspace?: {
+    members?: string[];
+  };
 }
 
 interface DfxCanister {
@@ -89,6 +96,7 @@ export const generate = async (
     // Cargo.toml (replace if file starts with generated comment)
     const cargoTomlPath = 'Cargo.toml';
     const cargoTomlExists = await exists(cargoTomlPath);
+    const getMemberPath = (name: string) => `.canpack/${name}`;
     if (
       !cargoTomlExists ||
       (await readFile(cargoTomlPath, 'utf8')).startsWith(
@@ -102,14 +110,26 @@ export const generate = async (
           [
             '# __members__',
             `${TOML.stringify({
-              members: rustProjects.map(([name]) => `.canpack/${name}`),
+              members: rustProjects.map(([name]) => getMemberPath(name)),
             }).trim()}`,
           ],
         ],
         { from: join(templateDirectory, 'Cargo.toml') },
       );
     } else {
-      // TODO: instructions for adding workspace members to existing Cargo.toml file
+      const cargoToml: CargoToml = TOML.parse(
+        await readFile(cargoTomlPath, 'utf8'),
+      );
+      const missingMembers = rustProjects
+        .filter(([name]) => !cargoToml?.workspace?.members?.includes(name))
+        .map(([name]) => getMemberPath(name));
+      if (missingMembers.length) {
+        console.log(
+          chalk.yellow(
+            `Add the following \`workspace.members\` to ${resolve(cargoTomlPath)}: ${JSON.stringify(missingMembers)}`,
+          ),
+        );
+      }
     }
 
     // .canpack/
