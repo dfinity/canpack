@@ -125,10 +125,10 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
         if let syn::Item::Fn(function) = item {
             functions.push(function);
         } else {
-            module_output = quote! {
-                #module_output
-                #item
-            };
+            return Err(syn::Error::new_spanned(
+                item,
+                "expected a function in `canpack::export!` macro",
+            ));
         }
     }
     for mut function in functions {
