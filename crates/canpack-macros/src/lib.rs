@@ -109,7 +109,7 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
     let input2: TokenStream2 = input.into();
     let module: syn::ItemMod = syn::parse(
         quote! {
-            mod __canpack_mod {
+            mod __canpack_export {
                 #input2
             }
         }

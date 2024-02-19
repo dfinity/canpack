@@ -166,7 +166,7 @@ dependencies = [
 
 [[package]]
 name = "canpack"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "canpack-macros",
 ]
@@ -180,7 +180,7 @@ dependencies = [
 
 [[package]]
 name = "canpack-macros"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "proc-macro2",
  "quote",
