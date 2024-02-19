@@ -1,5 +1,5 @@
 use proc_macro::TokenStream;
-use quote::{quote, ToTokens};
+use quote::quote;
 use syn::{parse::Parser, parse_macro_input, punctuated::Punctuated, spanned::Spanned};
 
 #[derive(Default)]
@@ -17,14 +17,14 @@ enum MethodMode {
 }
 
 impl MethodMode {
-    pub fn candid_mode(&self) -> &'static str {
-        match self {
-            // Self::Init => "init",
-            Self::Query => "query",
-            // Self::CompositeQuery => "composite_query",
-            Self::Update => "update",
-        }
-    }
+    // pub fn candid_mode(&self) -> &'static str {
+    //     match self {
+    //         // Self::Init => "init",
+    //         Self::Query => "query",
+    //         // Self::CompositeQuery => "composite_query",
+    //         Self::Update => "update",
+    //     }
+    // }
 
     pub fn ic_cdk_attr(&self) -> &'static str {
         match self {
@@ -78,10 +78,10 @@ fn get_canpack_attribute(meta_items: Vec<syn::Meta>) -> syn::Result<CanpackAttri
                     syn::Error::new_spanned(meta, format!("unknown mode: {}", mode))
                 })?)
             }
-            _ => {
+            meta => {
                 return Err(syn::Error::new_spanned(
                     meta,
-                    "unknown or conflicting attribute",
+                    format!("unknown or conflicting attribute: {}", quote!(#meta)),
                 ))
             }
         }
@@ -102,6 +102,14 @@ pub fn export(input: TokenStream) -> TokenStream {
             .into_iter()
             .partition(|attr| attr.path().is_ident("canpack"));
         function.attrs = fn_attrs;
+        if canpack_attrs.len() > 1 {
+            return syn::Error::new_spanned(
+                canpack_attrs.last().unwrap(),
+                "more than one #[canpack] attribute on the same function",
+            )
+            .to_compile_error()
+            .into();
+        }
 
         let fn_sig = &function.sig;
         let fn_name = &function.sig.ident;
@@ -120,27 +128,35 @@ pub fn export(input: TokenStream) -> TokenStream {
             .collect::<Punctuated<_, syn::Token![,]>>();
 
         let mut mode = MethodMode::Query;
-        let mut fn_sig_rename = fn_sig.clone();
+        let mut candid_meta = None;
+
         for attr in canpack_attrs {
-            let attrs = match Punctuated::<syn::Meta, syn::Token![,]>::parse_terminated
-                .parse(attr.meta.to_token_stream().into())
-            {
-                Ok(attrs) => attrs.into_iter().collect(),
+            let meta_list = match attr.meta.require_list() {
+                Ok(meta) => meta,
                 Err(err) => return err.to_compile_error().into(),
             };
-            let canpack_attr = match get_canpack_attribute(attrs) {
+
+            let args = match Punctuated::<syn::Meta, syn::Token![,]>::parse_terminated
+                .parse(meta_list.tokens.clone().into())
+            {
+                Ok(args) => args.into_iter().collect(),
+                Err(err) => return err.to_compile_error().into(),
+            };
+            let canpack_attr = match get_canpack_attribute(args) {
                 Ok(attr) => attr,
                 Err(err) => return err.to_compile_error().into(),
             };
-            fn_sig_rename.ident = canpack_attr
-                .rename
-                .map(|id| syn::Ident::new(&id, attr.span()))
-                .unwrap_or(fn_sig_rename.ident);
+
             mode = canpack_attr.mode.unwrap_or(mode);
+            candid_meta = Some(attr.meta);
         }
 
         let ic_cdk_attr_ident = syn::Ident::new(mode.ic_cdk_attr(), function.span());
-        let candid_mode_ident = syn::Ident::new(mode.candid_mode(), function.span());
+        // let candid_meta = if let Some(meta) = candid_meta {
+        //     quote! {#meta}
+        // } else {
+        //     quote! {}
+        // };
 
         module_output = quote! {
             #module_output
@@ -148,12 +164,12 @@ pub fn export(input: TokenStream) -> TokenStream {
         };
         canpack_output = quote! {
             #canpack_output
-            #[ic_cdk::#ic_cdk_attr_ident]
-            #[candid::candid_method(#candid_mode_ident)]
-            #fn_sig_rename {
+            #[::ic_cdk::#ic_cdk_attr_ident]
+            #[::candid::candid_method(#candid_meta)]
+            #fn_sig {
                 $crate::#fn_name(#fn_args)
             }
-        }
+        };
     }
     let output = quote! {
         #module_output

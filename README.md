@@ -135,9 +135,11 @@ dfx deploy
 
 ## Rust Crates
 
-Add Canpack support to any IC Wasm-compatible Rust crate by exporting a top-level `canpack!` macro. 
+It's relatively easy to add Canpack support to any IC Wasm-compatible Rust crate.
 
-For example, here is the implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) crate:
+First, add [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file.
+
+Here is the full implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) crate:
 
 ```rust
 canpack::export! {
