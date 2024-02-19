@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
-import { Config, configSchema } from './config';
-import { generate } from './generate';
+import { Config, configSchema } from './config.js';
+import { generate } from './generate.js';
 import { join } from 'path';
 import Ajv from 'ajv';
-import { exists } from './util';
-import { loadMopsCanisters } from './mops';
+import { exists } from './util.js';
+import { loadMopsCanisters } from './mops.js';
 
 const ajv = new Ajv();
 

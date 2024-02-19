@@ -1,4 +1,4 @@
 #! /usr/bin/env node
 'use strict';
 
-require('../lib/commands/canpack');
+import('../lib/commands/canpack.js');

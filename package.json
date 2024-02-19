@@ -4,6 +4,7 @@
   "description": "Package multiple libraries into one ICP canister.",
   "author": "Ryan Vandersmith (https://github.com/rvanasa)",
   "license": "Apache-2.0",
+  "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
@@ -14,7 +15,7 @@
     "directory": "https://github.com/rvanasa/canpack.git"
   },
   "scripts": {
-    "start": "ts-node src/commands/canpack",
+    "start": "ts-node --esm src/commands/canpack",
     "build": "rimraf ./lib && tsc -p .",
     "prepare": "husky install",
     "generate": "node utils/generate",
@@ -32,7 +33,7 @@
     "@iarna/toml": "2.2.5",
     "ajv": "^8.12.0",
     "commander": "^12.0.0",
-    "execa": "^5.1.1",
+    "execa": "^8.0.1",
     "mkdirp": "^3.0.1",
     "recursive-copy": "^2.0.14",
     "rimraf": "^5.0.5"

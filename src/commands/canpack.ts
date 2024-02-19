@@ -1,6 +1,5 @@
 import { program } from 'commander';
-import { join } from 'path';
-import { canpack, loadConfig } from '..';
+import { canpack, loadConfig } from '../index.js';
 
 const { directory, version } = program
   .name('canpack')

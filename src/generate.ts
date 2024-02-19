@@ -1,13 +1,12 @@
+import TOML from '@iarna/toml';
+import { execa } from 'execa';
 import { readFile, writeFile } from 'fs/promises';
 import { mkdirp } from 'mkdirp';
 import { join } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
-import { Config } from './config';
-import { exists } from './util';
-import TOML from '@iarna/toml';
-
-import execa = require('execa');
+import { Config } from './config.js';
+import { exists, moduleRelative } from './util.js';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
@@ -81,7 +80,10 @@ export const generate = async (
         )
       : [];
 
-    const templateDirectory = join(__dirname, '../common/templates');
+    const templateDirectory = moduleRelative(
+      import.meta,
+      '../common/templates',
+    );
 
     // Cargo.toml (replace if file starts with generated comment)
     const cargoTomlPath = join(directory, 'Cargo.toml');
