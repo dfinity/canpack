@@ -7,7 +7,7 @@ Canpack is a code generation tool which simplifies cross-language communication 
 ## Installation
 
 Ensure that the following software is installed on your system:
-* [`dfx`](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
+* [dfx](https://support.dfinity.org/hc/en-us/articles/10552713577364-How-do-I-install-dfx) (latest version)
 * [Rust](https://www.rust-lang.org/tools/install) `>= 1.71`
 * [Node.js](https://nodejs.org/en) `>= 16`
 
