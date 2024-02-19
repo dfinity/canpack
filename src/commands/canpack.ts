@@ -1,6 +1,7 @@
+import chalk from 'chalk';
 import { program } from 'commander';
-import { Options, canpack } from '../index.js';
 import { loadConfig } from '../config.js';
+import { canpack } from '../index.js';
 
 const { verbose, directory, version } = program
   .name('canpack')
@@ -19,14 +20,16 @@ if (directory) {
   process.chdir(directory);
 }
 
-const options: Options = {
-  verbose,
-};
-
 (async () => {
   const directory = '.'; // Current working directory
 
   const config = await loadConfig(directory);
-
-  await canpack(config, options);
+  if (verbose) {
+    config.verbose = true;
+    console.log(
+      'Resolved configuration:',
+      chalk.gray(JSON.stringify(config, null, 2)),
+    );
+  }
+  await canpack(config);
 })();

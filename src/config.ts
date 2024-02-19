@@ -8,6 +8,7 @@ import { join } from 'path';
 export interface Config {
   canisters?: Record<string, CanisterConfig>;
   git?: boolean;
+  verbose?: boolean;
 }
 
 export type CanisterConfig = RustConfig;

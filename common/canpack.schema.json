@@ -31,6 +31,9 @@
     },
     "git": {
       "type": "boolean"
+    },
+    "verbose": {
+      "type": "boolean"
     }
   }
 }

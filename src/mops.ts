@@ -9,7 +9,6 @@ import { resolvePackages } from 'ic-mops/dist/resolve-packages.js';
 import { join, relative } from 'path';
 import { CanisterConfig, RustConfig, RustDependency } from './config.js';
 import { exists } from './util.js';
-import { Options } from './index.js';
 
 interface MopsConfig {
   dependencies?: Record<string, string>;

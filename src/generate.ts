@@ -6,7 +6,6 @@ import { join, resolve } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 import { Config } from './config.js';
-import { Options } from './index.js';
 import { exists, moduleRelative } from './util.js';
 import chalk from 'chalk';
 
@@ -40,10 +39,7 @@ const replaceInFile = async (
   await writeFile(path, content);
 };
 
-export const generate = async (
-  config: Config,
-  options: Options,
-): Promise<string[]> => {
+export const generate = async (config: Config): Promise<string[]> => {
   const changes = [];
 
   // dfx.json
