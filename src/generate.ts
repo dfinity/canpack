@@ -170,11 +170,13 @@ export const generate = async (
       }
 
       // .canpack/<canister>/service.did
-      // TODO: possibly replace with a different approach
       for (const [name, canisterConfig] of rustProjects) {
         changes.push(`* .canpack/${name}/service.did`);
         const result = await execa('cargo', ['run', '--package', name], {
           cwd: directory,
+          stderr: 'inherit', // Console output
+        }).catch((err) => {
+          process.exit(err.exitCode);
         });
         await writeFile(
           join(canpackDirectory, name, 'service.did'),

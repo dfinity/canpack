@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use syn::{parse::Parser, parse_macro_input, punctuated::Punctuated, spanned::Spanned};
+use syn::{punctuated::Punctuated, spanned::Spanned, Attribute};
 
 #[derive(Default)]
 struct CanpackAttribute {
@@ -12,26 +13,26 @@ struct CanpackAttribute {
 enum MethodMode {
     // Init,
     Query,
-    // CompositeQuery,
+    CompositeQuery,
     Update,
 }
 
 impl MethodMode {
-    // pub fn candid_mode(&self) -> &'static str {
-    //     match self {
-    //         // Self::Init => "init",
-    //         Self::Query => "query",
-    //         // Self::CompositeQuery => "composite_query",
-    //         Self::Update => "update",
-    //     }
-    // }
-
-    pub fn ic_cdk_attr(&self) -> &'static str {
+    pub fn candid_mode(&self) -> TokenStream2 {
         match self {
-            // Self::Init => "query",
-            Self::Query => "query",
-            // Self::CompositeQuery => "query",
-            Self::Update => "update",
+            // Self::Init => "init",
+            Self::Query => quote! {query},
+            Self::CompositeQuery => quote! {composite_query},
+            Self::Update => quote! {update},
+        }
+    }
+
+    pub fn ic_cdk_attr(&self) -> TokenStream2 {
+        match self {
+            // Self::Init => "init",
+            Self::Query => quote! {query},
+            Self::CompositeQuery => quote! {query(composite = true)},
+            Self::Update => quote! {update},
         }
     }
 }
@@ -60,12 +61,19 @@ fn get_lit_str(expr: &syn::Expr) -> std::result::Result<syn::LitStr, ()> {
     Err(())
 }
 
-fn get_canpack_attribute(meta_items: Vec<syn::Meta>) -> syn::Result<CanpackAttribute> {
+fn parse_canpack_args(attr: &Attribute) -> syn::Result<Punctuated<syn::Meta, syn::Token![,]>> {
+    Ok(attr
+        .meta
+        .require_list()?
+        .parse_args_with(Punctuated::<syn::Meta, syn::Token![,]>::parse_terminated)?)
+}
+
+fn read_canpack_attribute(args: Vec<syn::Meta>) -> syn::Result<CanpackAttribute> {
     let mut attr = CanpackAttribute {
         rename: None,
         mode: None,
     };
-    for meta in meta_items {
+    for meta in args {
         match &meta {
             syn::Meta::NameValue(m) if m.path.is_ident("rename") && attr.rename.is_none() => {
                 if let Ok(lit) = get_lit_str(&m.value) {
@@ -81,7 +89,7 @@ fn get_canpack_attribute(meta_items: Vec<syn::Meta>) -> syn::Result<CanpackAttri
             meta => {
                 return Err(syn::Error::new_spanned(
                     meta,
-                    format!("unknown or conflicting attribute: {}", quote!(#meta)),
+                    format!("unknown or conflicting attribute: {}", quote! {#meta}),
                 ))
             }
         }
@@ -91,7 +99,14 @@ fn get_canpack_attribute(meta_items: Vec<syn::Meta>) -> syn::Result<CanpackAttri
 
 #[proc_macro]
 pub fn export(input: TokenStream) -> TokenStream {
-    let fn_item = parse_macro_input!(input as syn::ItemFn);
+    match export_macro(input) {
+        Ok(output) => output,
+        Err(err) => err.to_compile_error().into(),
+    }
+}
+
+fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
+    let fn_item = syn::parse::<syn::ItemFn>(input)?;
     let functions = vec![fn_item]; // TODO
 
     let mut module_output = quote! {};
@@ -103,12 +118,10 @@ pub fn export(input: TokenStream) -> TokenStream {
             .partition(|attr| attr.path().is_ident("canpack"));
         function.attrs = fn_attrs;
         if canpack_attrs.len() > 1 {
-            return syn::Error::new_spanned(
+            return Err(syn::Error::new_spanned(
                 canpack_attrs.last().unwrap(),
                 "more than one #[canpack] attribute on the same function",
-            )
-            .to_compile_error()
-            .into();
+            ));
         }
 
         let fn_sig = &function.sig;
@@ -128,35 +141,20 @@ pub fn export(input: TokenStream) -> TokenStream {
             .collect::<Punctuated<_, syn::Token![,]>>();
 
         let mut mode = MethodMode::Query;
-        let mut candid_meta = None;
+        let mut fn_sig_rename = fn_sig.clone();
 
         for attr in canpack_attrs {
-            let meta_list = match attr.meta.require_list() {
-                Ok(meta) => meta,
-                Err(err) => return err.to_compile_error().into(),
-            };
-
-            let args = match Punctuated::<syn::Meta, syn::Token![,]>::parse_terminated
-                .parse(meta_list.tokens.clone().into())
-            {
-                Ok(args) => args.into_iter().collect(),
-                Err(err) => return err.to_compile_error().into(),
-            };
-            let canpack_attr = match get_canpack_attribute(args) {
-                Ok(attr) => attr,
-                Err(err) => return err.to_compile_error().into(),
-            };
-
+            let args = parse_canpack_args(&attr)?;
+            let canpack_attr = read_canpack_attribute(args.clone().into_iter().collect())?;
             mode = canpack_attr.mode.unwrap_or(mode);
-            candid_meta = Some(attr.meta);
+            fn_sig_rename.ident = canpack_attr
+                .rename
+                .map(|name| syn::Ident::new(&name, attr.span()))
+                .unwrap_or(fn_sig_rename.ident);
         }
 
-        let ic_cdk_attr_ident = syn::Ident::new(mode.ic_cdk_attr(), function.span());
-        // let candid_meta = if let Some(meta) = candid_meta {
-        //     quote! {#meta}
-        // } else {
-        //     quote! {}
-        // };
+        let ic_cdk_attr = mode.ic_cdk_attr();
+        let candid_mode = mode.candid_mode();
 
         module_output = quote! {
             #module_output
@@ -164,9 +162,9 @@ pub fn export(input: TokenStream) -> TokenStream {
         };
         canpack_output = quote! {
             #canpack_output
-            #[::ic_cdk::#ic_cdk_attr_ident]
-            #[::candid::candid_method(#candid_meta)]
-            #fn_sig {
+            #[::ic_cdk::#ic_cdk_attr]
+            #[::candid::candid_method(#candid_mode)]
+            #fn_sig_rename {
                 $crate::#fn_name(#fn_args)
             }
         };
@@ -180,5 +178,9 @@ pub fn export(input: TokenStream) -> TokenStream {
             };
         }
     };
-    output.into()
+    // Err(syn::Error::new_spanned(
+    //     output.clone(),
+    //     format!(">>>\n{}", quote! {#output}),
+    // ))?;
+    Ok(output.into())
 }
