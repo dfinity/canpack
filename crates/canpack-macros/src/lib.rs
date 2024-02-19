@@ -45,7 +45,7 @@ impl<'a> TryFrom<&'a str> for MethodMode {
         Ok(match mode {
             // "init" => Init,
             "query" => Query,
-            // "composite_query" => CompositeQuery,
+            "composite_query" => CompositeQuery,
             "update" => Update,
             _ => Err(mode)?,
         })
