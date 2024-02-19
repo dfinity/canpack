@@ -45,7 +45,7 @@ export const loadConfig = async (directory: string): Promise<Config> => {
     throw new Error(JSON.stringify(validate.errors, null, 2));
   }
   // mops.toml
-  const mopsCanisters = await loadMopsCanisters(directory);
+  const mopsCanisters = await loadMopsCanisters();
   if (mopsCanisters) {
     config.canisters = { ...mopsCanisters, ...config.canisters };
   }

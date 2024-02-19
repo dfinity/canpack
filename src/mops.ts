@@ -9,19 +9,22 @@ import { resolvePackages } from 'ic-mops/dist/resolve-packages.js';
 import { join, relative } from 'path';
 import { CanisterConfig, RustConfig, RustDependency } from './config.js';
 import { exists } from './util.js';
+import { Options } from './index.js';
 
 interface MopsConfig {
   dependencies?: Record<string, string>;
   'rust-dependencies'?: Record<string, string | RustDependency>;
 }
 
-export const loadMopsCanisters = async (
-  directory: string,
-): Promise<Record<string, CanisterConfig> | undefined> => {
+export const loadMopsCanisters = async (): Promise<
+  Record<string, CanisterConfig> | undefined
+> => {
+  const baseDirectory = '.'; // Mops currently only supports CWD in `resolvePackages()`
+
   const canisters: Record<string, CanisterConfig> = {};
   const rustConfig: RustConfig = { type: 'rust', parts: [] };
   canisters['motoko_rust'] = rustConfig;
-  if (!addMopsRustDependencies(directory, directory, rustConfig)) {
+  if (!addMopsRustDependencies(baseDirectory, baseDirectory, rustConfig)) {
     return;
   }
 
@@ -29,18 +32,18 @@ export const loadMopsCanisters = async (
   await Promise.all(
     Object.entries(mopsPackages).map(async ([name, version]) => {
       // TODO: contribute utility method in Mops
-      const dependencyType = getDependencyType(version);
-      let packageDirectory;
-      if (dependencyType === 'local') {
-        packageDirectory = relative(directory, version);
-      } else if (dependencyType === 'github') {
-        packageDirectory = relative(directory, formatGithubDir(name, version));
-      } else if (dependencyType === 'mops') {
-        packageDirectory = relative(directory, formatDir(name, version));
+      const type = getDependencyType(version);
+      let directory;
+      if (type === 'local') {
+        directory = relative(baseDirectory, version);
+      } else if (type === 'github') {
+        directory = relative(baseDirectory, formatGithubDir(name, version));
+      } else if (type === 'mops') {
+        directory = relative(baseDirectory, formatDir(name, version));
       } else {
-        throw new Error(`Unknown dependency type: ${dependencyType}`);
+        throw new Error(`Unknown dependency type: ${type}`);
       }
-      addMopsRustDependencies(packageDirectory, directory, rustConfig);
+      addMopsRustDependencies(directory, baseDirectory, rustConfig);
     }),
   );
   return canisters;
