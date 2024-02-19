@@ -7,16 +7,12 @@ import {
 } from 'ic-mops/dist/mops.js';
 import { resolvePackages } from 'ic-mops/dist/resolve-packages.js';
 import { join, relative } from 'path';
-import {
-  CanisterConfig,
-  RustConfig,
-  RustDependency as RustPart,
-} from './config.js';
+import { CanisterConfig, RustConfig, RustDependency } from './config.js';
 import { exists } from './util.js';
 
 interface MopsConfig {
   dependencies?: Record<string, string>;
-  'rust-dependencies'?: Record<string, string | RustPart>;
+  'rust-dependencies'?: Record<string, string | RustDependency>;
 }
 
 export const loadMopsCanisters = async (
@@ -42,15 +38,11 @@ export const loadMopsCanisters = async (
       } else if (dependencyType === 'mops') {
         packageDirectory = relative(directory, formatDir(name, version));
       } else {
-        return;
+        throw new Error(`Unknown dependency type: ${dependencyType}`);
       }
-
       addMopsRustDependencies(packageDirectory, directory, rustConfig);
     }),
   );
-
-  console.log('>>>>>', rustConfig); /////
-
   return canisters;
 };
 
@@ -79,7 +71,6 @@ const addMopsRustDependencies = async (
             }),
       });
     });
-    // TODO: handle dependency conflicts
   }
   return true;
 };

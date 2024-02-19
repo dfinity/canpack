@@ -6,6 +6,7 @@ import { join } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 import { Config } from './config.js';
+import { Options } from './index.js';
 import { exists, moduleRelative } from './util.js';
 
 interface DfxJson {
@@ -33,13 +34,13 @@ const replaceInFile = async (
 };
 
 export const generate = async (
-  directory: string,
   config: Config,
+  options: Options,
 ): Promise<string[]> => {
   const changes = [];
 
   // dfx.json
-  const dfxJsonPath = join(directory, 'dfx.json');
+  const dfxJsonPath = 'dfx.json';
   if (await exists(dfxJsonPath)) {
     let changed = false;
     const json = JSON.parse(await readFile(dfxJsonPath, 'utf8')) as DfxJson;
@@ -86,7 +87,7 @@ export const generate = async (
     );
 
     // Cargo.toml (replace if file starts with generated comment)
-    const cargoTomlPath = join(directory, 'Cargo.toml');
+    const cargoTomlPath = 'Cargo.toml';
     const cargoTomlExists = await exists(cargoTomlPath);
     if (
       !cargoTomlExists ||
@@ -112,7 +113,7 @@ export const generate = async (
     }
 
     // .canpack/
-    const canpackDirectory = join(directory, '.canpack');
+    const canpackDirectory = '.canpack';
     if (await exists(canpackDirectory)) {
       changes.push('* .canpack/');
       await rimraf(canpackDirectory);
@@ -175,7 +176,6 @@ export const generate = async (
       for (const [name, canisterConfig] of rustProjects) {
         changes.push(`* .canpack/${name}/service.did`);
         const result = await execa('cargo', ['run', '--package', name], {
-          cwd: directory,
           stderr: 'inherit', // Console output
         }).catch((err) => {
           process.exit(err.exitCode);

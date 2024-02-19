@@ -1,8 +1,10 @@
 import { program } from 'commander';
-import { canpack, loadConfig } from '../index.js';
+import { Options, canpack } from '../index.js';
+import { loadConfig } from '../config.js';
 
-const { directory, version } = program
+const { verbose, directory, version } = program
   .name('canpack')
+  .option('-v, --verbose', `verbose output`)
   .option('-D, --directory <directory>', `directory`, '.')
   .option('-V, --version', `show installed version`)
   .parse()
@@ -13,8 +15,18 @@ if (version) {
   process.exit(0);
 }
 
+if (directory) {
+  process.chdir(directory);
+}
+
+const options: Options = {
+  verbose,
+};
+
 (async () => {
+  const directory = '.'; // Current working directory
+
   const config = await loadConfig(directory);
 
-  await canpack(directory, config);
+  await canpack(config, options);
 })();
