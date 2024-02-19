@@ -1,7 +1,5 @@
 import Rust "canister:motoko_rust";
 
-import Blob "mo:base/Blob";
-
 actor {
   public composite query func hello(name : Text) : async Text {
     await Rust.canpack_example_hello(name);

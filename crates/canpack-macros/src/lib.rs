@@ -106,11 +106,31 @@ pub fn export(input: TokenStream) -> TokenStream {
 }
 
 fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
-    let fn_item = syn::parse::<syn::ItemFn>(input)?;
-    let functions = vec![fn_item]; // TODO
+    let input2: TokenStream2 = input.into();
+    let module: syn::ItemMod = syn::parse(
+        quote! {
+            mod __canpack_mod {
+                #input2
+            }
+        }
+        .into(),
+    )?;
 
     let mut module_output = quote! {};
     let mut canpack_output = quote! {};
+
+    let mut functions = vec![];
+
+    for item in module.content.unwrap().1 {
+        if let syn::Item::Fn(function) = item {
+            functions.push(function);
+        } else {
+            module_output = quote! {
+                #module_output
+                #item
+            };
+        }
+    }
     for mut function in functions {
         let (canpack_attrs, fn_attrs) = function
             .attrs
@@ -133,12 +153,15 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
             .map(|arg| {
                 if let syn::FnArg::Typed(pat_type) = arg {
                     if let syn::Pat::Ident(id) = &*pat_type.pat {
-                        return &id.ident;
+                        return Ok(&id.ident);
                     }
                 }
-                unimplemented!("non-identifier pattern in function input args")
+                Err(syn::Error::new_spanned(
+                    arg,
+                    "non-identifier pattern in function args",
+                ))
             })
-            .collect::<Punctuated<_, syn::Token![,]>>();
+            .collect::<syn::Result<Punctuated<_, syn::Token![,]>>>()?;
 
         let mut mode = MethodMode::Query;
         let mut fn_sig_rename = fn_sig.clone();
