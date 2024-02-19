@@ -87,6 +87,7 @@
   ],
   "size-limit": [
     {
+      "platform": "node",
       "path": "lib/index.js"
     }
   ]
