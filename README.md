@@ -84,6 +84,12 @@ await canpack(directory, config);
 
 ## Advanced Usage
 
+Pass the `-v` or `--verbose` flag to view the resolved JSON configuration for a project:
+
+```bash
+canpack --verbose
+```
+
 Below is a step-by-step guide for setting up a `dfx` project with a `canpack.json` config file. The goal here is to illustrate how one could use Canpack without additional tools such as Mops, which is specific to the Motoko ecosystem. 
 
 Run `dfx new my_project`, selecting "Motoko" for the backend and "No frontend canister" for the frontend. Once complete, run `cd my_project` and open in your editor of choice. 
