@@ -166,7 +166,7 @@ dependencies = [
 
 [[package]]
 name = "canpack"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "canpack-macros",
 ]
@@ -180,7 +180,7 @@ dependencies = [
 
 [[package]]
 name = "canpack-macros"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -713,7 +713,7 @@ checksum = "523dc4f511e55ab87b694dc30d0f820d60906ef06413f93d4d7a1385599cc149"
 
 [[package]]
 name = "motoko_rust"
-version = "0.0.1"
+version = "0.0.0"
 dependencies = [
  "candid",
  "canpack-example-hello",
