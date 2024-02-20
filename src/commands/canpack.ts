@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { program } from 'commander';
+import { readFileSync } from 'fs';
 import { loadConfig } from '../config.js';
 import { canpack } from '../index.js';
 import { moduleRelative } from '../util.js';
@@ -15,7 +16,9 @@ const { verbose, directory, version } = program
 if (version) {
   console.log(
     'canpack',
-    JSON.parse(moduleRelative(import.meta, '../../package.json')).version,
+    JSON.parse(
+      readFileSync(moduleRelative(import.meta, '../../package.json'), 'utf8'),
+    ).version,
   );
   process.exit(0);
 }
@@ -31,10 +34,8 @@ if (directory) {
   const config = await loadConfig(directory);
   if (verbose) {
     config.verbose = true;
-    console.log(
-      'Resolved configuration:',
-      chalk.gray(JSON.stringify(config, null, 2)),
-    );
+    console.log('Resolved configuration:');
+    console.log(chalk.gray(JSON.stringify(config, null, 2)));
   }
   await canpack(config);
 })();
