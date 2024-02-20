@@ -2,7 +2,7 @@
 
 [package]
 name = "__package_name__"
-version = "0.0.1"
+version = "0.0.0"
 edition = "2021"
 
 [[bin]]
