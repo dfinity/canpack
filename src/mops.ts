@@ -6,13 +6,24 @@ import {
   getDependencyType,
 } from 'ic-mops/dist/mops.js';
 import { resolvePackages } from 'ic-mops/dist/resolve-packages.js';
-import { join, relative } from 'path';
+import { join, relative, resolve } from 'path';
 import { CanisterConfig, RustConfig, RustDependency } from './config.js';
-import { exists } from './util.js';
+import { exists, jsonEqual } from './util.js';
 
 interface MopsConfig {
+  package?: {
+    name?: string;
+    version?: string;
+    description?: string;
+  };
   dependencies?: Record<string, string>;
   'rust-dependencies'?: Record<string, string | RustDependency>;
+}
+
+const mopsPathSymbol = Symbol.for('mopsPath');
+
+interface MopsRustDependency extends RustDependency {
+  [mopsPathSymbol]?: string;
 }
 
 export const loadMopsCanisters = async (): Promise<
@@ -23,15 +34,16 @@ export const loadMopsCanisters = async (): Promise<
   const canisters: Record<string, CanisterConfig> = {};
   const rustConfig: RustConfig = { type: 'rust', parts: [] };
   canisters['motoko_rust'] = rustConfig;
-  const dependencies = await getMopsRustDependencies(
+  const mainDependencies = await getMopsRustDependencies(
     baseDirectory,
     baseDirectory,
   );
-  if (!dependencies) {
+  if (!mainDependencies) {
     return;
   }
-
+  const dependencies = [...mainDependencies];
   const mopsPackages = await resolvePackages({ verbose: false });
+
   (
     await Promise.all(
       Object.entries(mopsPackages).map(async ([name, version]) => {
@@ -52,7 +64,28 @@ export const loadMopsCanisters = async (): Promise<
     )
   ).forEach((packageDependencies) => {
     if (packageDependencies) {
-      dependencies.push(...packageDependencies);
+      packageDependencies.forEach((dependency) => {
+        const other = dependencies.find(
+          (other) => dependency.package === other.package,
+        );
+        if (!other) {
+          dependencies.push(dependency);
+        } else if (
+          !mainDependencies.includes(other) &&
+          !jsonEqual(dependency, other)
+        ) {
+          const showDependency = (dependency: MopsRustDependency) =>
+            `${dependency.package} = ${JSON.stringify({ ...dependency, package: undefined })} in ${resolve(dependency[mopsPathSymbol])}`;
+          throw new Error(
+            [
+              `Conflict between transitive Rust dependencies:`,
+              showDependency(dependency),
+              showDependency(other),
+              `Fix this by specifying \`${dependency.package} = ...\` in the [rust-dependencies] section of your mops.toml file.`,
+            ].join('\n'),
+          );
+        }
+      });
     }
   });
   rustConfig.parts.push(...dependencies);
@@ -63,17 +96,18 @@ export const loadMopsCanisters = async (): Promise<
 const getMopsRustDependencies = async (
   directory: string,
   baseDirectory: string,
-): Promise<RustDependency[] | undefined> => {
+): Promise<MopsRustDependency[] | undefined> => {
   const mopsTomlPath = join(directory, 'mops.toml');
   if (!(await exists(mopsTomlPath))) {
     return;
   }
-  const dependencies: RustDependency[] = [];
+  const dependencies: MopsRustDependency[] = [];
   const mopsToml: MopsConfig = TOML.parse(await readFile(mopsTomlPath, 'utf8'));
   if (mopsToml?.['rust-dependencies']) {
     Object.entries(mopsToml['rust-dependencies']).forEach(([name, value]) => {
       dependencies.push({
         package: name,
+        [mopsPathSymbol]: mopsTomlPath,
         ...(typeof value === 'string'
           ? { version: value }
           : {

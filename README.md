@@ -17,7 +17,7 @@ Run the following command to install the Canpack CLI on your global system path:
 npm install -g canpack
 ```
 
-## Quick Start (Mops)
+## Quick Start (Motoko + Rust)
 
 Canpack has built-in support for the [Mops](https://mops.one/) package manager. 
 

@@ -12,8 +12,13 @@ export const exists = async (filePath: string): Promise<boolean> => {
   }
 };
 
+/// Construct a relative path from the specified module import metadata.
 export const moduleRelative = (meta: ImportMeta, ...args: string[]): string => {
-  /// Equivalent to `import.meta.dirname` in recent Node.js versions
   const importMetaDirname = dirname(fileURLToPath(meta.url));
   return join(importMetaDirname, ...args);
+};
+
+/// Check if the JSON of two objects are equal to each other
+export const jsonEqual = <T extends object>(a: T, b: T): boolean => {
+  return JSON.stringify(a) === JSON.stringify(b);
 };
