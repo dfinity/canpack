@@ -43,7 +43,9 @@ export const loadMopsCanisters = async (
   if (!mainDependencies) {
     return;
   }
-  console.log(chalk.grey('Installing Mops packages...'));
+  if (verbose) {
+    console.log(chalk.grey('Installing Mops packages...'));
+  }
   await installAll({ verbose, lock: 'ignore' });
   const dependencies = [...mainDependencies];
   const mopsPackages = await resolvePackages({ verbose: false });

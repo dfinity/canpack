@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { Config } from './config.js';
 import { generate } from './generate.js';
 
