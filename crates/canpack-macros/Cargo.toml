@@ -1,6 +1,6 @@
 [package]
 name = "canpack-macros"
-version = "0.0.2"
+version = "0.1.0"
 description = "Canpack Rust procedural macros"
 authors = ["Ryan Vandersmith"]
 license = "Apache-2.0"
