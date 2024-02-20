@@ -178,6 +178,7 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
 
         let ic_cdk_attr = mode.ic_cdk_attr();
         let candid_mode = mode.candid_mode();
+        let opt_await = fn_sig.asyncness.map(|_| quote! { .await });
 
         module_output = quote! {
             #module_output
@@ -185,10 +186,10 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
         };
         canpack_output = quote! {
             #canpack_output
-            #[::ic_cdk::#ic_cdk_attr]
-            #[::candid::candid_method(#candid_mode)]
+            #[ic_cdk::#ic_cdk_attr]
+            #[candid::candid_method(#candid_mode)]
             #fn_sig_rename {
-                $crate::#fn_name(#fn_args)
+                $crate::#fn_name(#fn_args)#opt_await
             }
         };
     }
