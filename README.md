@@ -51,38 +51,69 @@ actor {
 
 Any Rust crate with Canpack compatibility can be specified as a standard [`Cargo.toml` dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). See the [Rust Crates](#rust-crates) section for more details.
 
-## Programmatic API
+## Rust Crates
 
-Canpack is primarily intended as a low-level building block for use in package managers and other development tools. 
+It's relatively simple to add Canpack support to any IC Wasm-compatible Rust crate.
 
-Add the `canpack` dependency to your Node.js project with the following command:
+Here is the full implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) package:
 
-```bash
-npm i --save canpack
+```rust
+canpack::export! {
+    pub fn canpack_example_hello(name: String) -> String {
+        format!("Hello, {name}!")
+    }
+}
 ```
 
-The following example JavaScript code runs Canpack in the current working directory:
+If needed, you can configure the generated Candid method using a `#[canpack]` attribute:
 
-```js
-import { canpack } from 'canpack';
-
-const directory = '.';
-const config = {
-    canisters: {
-        my_canister: {
-            type: 'rust',
-            parts: [{
-                package: 'canpack-example-hello',
-                version: '^0.1',
-            }]
-        }
+```rust
+canpack::export! {
+    #[canpack(composite_query, rename = "canpack_example_hello")]
+    pub fn hello(name: String) -> String {
+        format!("Hello, {name}!")
     }
-};
+}
+```
 
-await canpack(directory, config);
+Note that it is possible to reference local constants, methods, etc.
+
+```rust
+const WELCOME: &str = "Welcome";
+
+fn hello(salutation: &str, name: String) -> String {
+    format!("{salutation}, {name}!")
+}
+
+canpack::export! {
+    pub fn canpack_example_hello(name: String) -> String {
+        hello(WELCOME, name)
+    }
+}
+```
+
+The `canpack::export!` shorthand requires adding [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file. It's also possible to manually define Candid methods by exporting a `canpack!` macro:
+
+```rust
+pub fn hello(name: String) -> String {
+    format!("Hello, {name}!")
+}
+
+#[macro_export]
+macro_rules! canpack {
+    () => {
+        #[ic_cdk::query]
+        #[candid::candid_method(query)]
+        fn canpack_example_hello(name: String) -> String {
+            $crate::hello(name)
+        }
+    };
+}
 ```
 
 ## Advanced Usage
+
+### `canpack.json`
 
 Pass the `-v` or `--verbose` flag to view the resolved JSON configuration for a project:
 
@@ -151,62 +182,33 @@ dfx start --background
 dfx deploy
 ```
 
-## Rust Crates
+### Programmatic API
 
-It's relatively simple to add Canpack support to any IC Wasm-compatible Rust crate.
+Canpack may be used as a low-level building block for package managers and other development tools. 
 
-Here is the full implementation of the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) package:
+Add the `canpack` dependency to your Node.js project with the following command:
 
-```rust
-canpack::export! {
-    pub fn canpack_example_hello(name: String) -> String {
-        format!("Hello, {name}!")
-    }
-}
+```bash
+npm i --save canpack
 ```
 
-If needed, you can configure the generated Candid method using a `#[canpack]` attribute:
+The following example JavaScript code runs Canpack in the current working directory:
 
-```rust
-canpack::export! {
-    #[canpack(composite_query, rename = "canpack_example_hello")]
-    pub fn hello(name: String) -> String {
-        format!("Hello, {name}!")
-    }
-}
-```
+```js
+import { canpack } from 'canpack';
 
-Note that it is possible to reference local constants, methods, etc.
-
-```rust
-const WELCOME: &str = "Welcome";
-
-fn hello(salutation: &str, name: String) -> String {
-    format!("{salutation}, {name}!")
-}
-
-canpack::export! {
-    pub fn canpack_example_hello(name: String) -> String {
-        hello(WELCOME, name)
-    }
-}
-```
-
-The `canpack::export!` shorthand requires adding [`canpack`](https://crates.io/crates/canpack) as a dependency in your Cargo.toml file. It's also possible to manually define Candid methods by exporting a `canpack!` macro:
-
-```rust
-pub fn hello(name: String) -> String {
-    format!("Hello, {name}!")
-}
-
-#[macro_export]
-macro_rules! canpack {
-    () => {
-        #[ic_cdk::query]
-        #[candid::candid_method(query)]
-        fn canpack_example_hello(name: String) -> String {
-            $crate::hello(name)
+const config = {
+    verbose: true,
+    canisters: {
+        my_canister: {
+            type: 'rust',
+            parts: [{
+                package: 'canpack-example-hello',
+                version: '^0.1',
+            }]
         }
-    };
-}
+    }
+};
+
+await canpack(config);
 ```
