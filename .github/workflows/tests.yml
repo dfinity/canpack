@@ -2,9 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
@@ -15,20 +15,21 @@ jobs:
         node-version: [16.x, 18.x, 20.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install dfx
-      uses: dfinity/setup-dfx@main
-    - name: Install Mops
-      run: npm i -g ic-mops
-    - run: dfx cache install
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - name: Test dfx directory
-      run: |
-        npm run build && bin/canpack.js -D tests/dfx
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install dfx
+        uses: dfinity/setup-dfx@main
+      - name: Install Mops
+        run: npm i -g ic-mops
+      - run: dfx cache install
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+      - name: Run CLI with `--version`
+        run: node_modules/.bin/canpack --version
+      - name: Test dfx directory
+        run: npm run build && bin/canpack.js -D tests/dfx
