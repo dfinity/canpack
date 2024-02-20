@@ -23,45 +23,56 @@ export const loadMopsCanisters = async (): Promise<
   const canisters: Record<string, CanisterConfig> = {};
   const rustConfig: RustConfig = { type: 'rust', parts: [] };
   canisters['motoko_rust'] = rustConfig;
-  if (!addMopsRustDependencies(baseDirectory, baseDirectory, rustConfig)) {
+  const dependencies = await getMopsRustDependencies(
+    baseDirectory,
+    baseDirectory,
+  );
+  if (!dependencies) {
     return;
   }
 
   const mopsPackages = await resolvePackages({ verbose: false });
-  await Promise.all(
-    Object.entries(mopsPackages).map(async ([name, version]) => {
-      // TODO: contribute utility method in Mops
-      const type = getDependencyType(version);
-      let directory;
-      if (type === 'local') {
-        directory = relative(baseDirectory, version);
-      } else if (type === 'github') {
-        directory = relative(baseDirectory, formatGithubDir(name, version));
-      } else if (type === 'mops') {
-        directory = relative(baseDirectory, formatDir(name, version));
-      } else {
-        throw new Error(`Unknown dependency type: ${type}`);
-      }
-      await addMopsRustDependencies(directory, baseDirectory, rustConfig);
-    }),
-  );
+  (
+    await Promise.all(
+      Object.entries(mopsPackages).map(async ([name, version]) => {
+        // TODO: contribute utility method in Mops
+        const type = getDependencyType(version);
+        let directory;
+        if (type === 'local') {
+          directory = relative(baseDirectory, version);
+        } else if (type === 'github') {
+          directory = relative(baseDirectory, formatGithubDir(name, version));
+        } else if (type === 'mops') {
+          directory = relative(baseDirectory, formatDir(name, version));
+        } else {
+          throw new Error(`Unknown dependency type: ${type}`);
+        }
+        return getMopsRustDependencies(directory, baseDirectory);
+      }),
+    )
+  ).forEach((packageDependencies) => {
+    if (packageDependencies) {
+      dependencies.push(...packageDependencies);
+    }
+  });
+  rustConfig.parts.push(...dependencies);
 
   return canisters;
 };
 
-const addMopsRustDependencies = async (
+const getMopsRustDependencies = async (
   directory: string,
   baseDirectory: string,
-  rustConfig: RustConfig,
-): Promise<boolean> => {
+): Promise<RustDependency[] | undefined> => {
   const mopsTomlPath = join(directory, 'mops.toml');
   if (!(await exists(mopsTomlPath))) {
-    return false;
+    return;
   }
+  const dependencies: RustDependency[] = [];
   const mopsToml: MopsConfig = TOML.parse(await readFile(mopsTomlPath, 'utf8'));
   if (mopsToml?.['rust-dependencies']) {
     Object.entries(mopsToml['rust-dependencies']).forEach(([name, value]) => {
-      rustConfig.parts.push({
+      dependencies.push({
         package: name,
         ...(typeof value === 'string'
           ? { version: value }
@@ -75,5 +86,5 @@ const addMopsRustDependencies = async (
       });
     });
   }
-  return true;
+  return dependencies;
 };
