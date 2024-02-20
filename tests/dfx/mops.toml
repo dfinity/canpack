@@ -1,7 +1,6 @@
 [dependencies]
 base = "0.10.4"
 ecdsa = "../packages/ecdsa"
-ecdsa = "../packages/ecdsa2"
 
 [rust-dependencies]
 canpack-example-hello = { path = "../../crates/canpack-example-hello" }
