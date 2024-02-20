@@ -10,31 +10,29 @@
             "type": "string"
           },
           "parts": {
-            "anyOf": [
-              { "type": "string" },
-              {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "path": { "type": "string" },
-                    "package": { "type": "string" },
-                    "version": { "type": "string" },
-                    "features": {
-                      "type": "array",
-                      "items": { "type": "string" }
-                    }
-                  },
-                  "required": ["package"]
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "package": { "type": "string" },
+                "version": { "type": "string" },
+                "features": {
+                  "type": "array",
+                  "items": { "type": "string" }
                 }
-              }
-            ]
+              },
+              "required": ["package"]
+            }
           }
         },
         "required": ["type", "parts"]
       }
     },
     "git": {
+      "type": "boolean"
+    },
+    "verbose": {
       "type": "boolean"
     }
   }

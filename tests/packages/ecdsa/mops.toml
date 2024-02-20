@@ -5,3 +5,6 @@ description = "ECDSA verification"
 
 [dependencies]
 base = "0.10.2"
+
+[rust-dependencies]
+ic-ecdsa = { path = "./rust" }

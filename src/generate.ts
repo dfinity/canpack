@@ -1,16 +1,22 @@
+import TOML from '@iarna/toml';
+import { execa } from 'execa';
 import { readFile, writeFile } from 'fs/promises';
 import { mkdirp } from 'mkdirp';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
-import { Config } from './config';
-import { exists } from './util';
-import TOML from '@iarna/toml';
-
-import execa = require('execa');
+import { Config } from './config.js';
+import { exists, moduleRelative } from './util.js';
+import chalk from 'chalk';
 
 interface DfxJson {
   canisters?: Record<string, DfxCanister>;
+}
+
+interface CargoToml {
+  workspace?: {
+    members?: string[];
+  };
 }
 
 interface DfxCanister {
@@ -33,14 +39,11 @@ const replaceInFile = async (
   await writeFile(path, content);
 };
 
-export const generate = async (
-  directory: string,
-  config: Config,
-): Promise<string[]> => {
+export const generate = async (config: Config): Promise<string[]> => {
   const changes = [];
 
   // dfx.json
-  const dfxJsonPath = join(directory, 'dfx.json');
+  const dfxJsonPath = 'dfx.json';
   if (await exists(dfxJsonPath)) {
     let changed = false;
     const json = JSON.parse(await readFile(dfxJsonPath, 'utf8')) as DfxJson;
@@ -81,11 +84,15 @@ export const generate = async (
         )
       : [];
 
-    const templateDirectory = join(__dirname, '../common/templates');
+    const templateDirectory = moduleRelative(
+      import.meta,
+      '../common/templates',
+    );
 
     // Cargo.toml (replace if file starts with generated comment)
-    const cargoTomlPath = join(directory, 'Cargo.toml');
+    const cargoTomlPath = 'Cargo.toml';
     const cargoTomlExists = await exists(cargoTomlPath);
+    const getMemberPath = (name: string) => `.canpack/${name}`;
     if (
       !cargoTomlExists ||
       (await readFile(cargoTomlPath, 'utf8')).startsWith(
@@ -99,18 +106,30 @@ export const generate = async (
           [
             '# __members__',
             `${TOML.stringify({
-              members: rustProjects.map(([name]) => `.canpack/${name}`),
+              members: rustProjects.map(([name]) => getMemberPath(name)),
             }).trim()}`,
           ],
         ],
         { from: join(templateDirectory, 'Cargo.toml') },
       );
     } else {
-      // TODO: instructions for adding workspace members to existing Cargo.toml file
+      const cargoToml: CargoToml = TOML.parse(
+        await readFile(cargoTomlPath, 'utf8'),
+      );
+      const missingMembers = rustProjects
+        .filter(([name]) => !cargoToml?.workspace?.members?.includes(name))
+        .map(([name]) => getMemberPath(name));
+      if (missingMembers.length) {
+        console.log(
+          chalk.yellow(
+            `Add the following \`workspace.members\` to ${resolve(cargoTomlPath)}: ${JSON.stringify(missingMembers)}`,
+          ),
+        );
+      }
     }
 
     // .canpack/
-    const canpackDirectory = join(directory, '.canpack');
+    const canpackDirectory = '.canpack';
     if (await exists(canpackDirectory)) {
       changes.push('* .canpack/');
       await rimraf(canpackDirectory);
@@ -173,7 +192,6 @@ export const generate = async (
       for (const [name, canisterConfig] of rustProjects) {
         changes.push(`* .canpack/${name}/service.did`);
         const result = await execa('cargo', ['run', '--package', name], {
-          cwd: directory,
           stderr: 'inherit', // Console output
         }).catch((err) => {
           process.exit(err.exitCode);

@@ -4,4 +4,4 @@ ecdsa = "../packages/ecdsa"
 
 [rust-dependencies]
 canpack-example-hello = { path = "../../crates/canpack-example-hello" }
-ic-ecdsa = { path = "../packages/ecdsa/rust" }
+# ic-ecdsa = { path = "../packages/ecdsa/rust" }

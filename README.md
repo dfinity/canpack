@@ -17,7 +17,7 @@ Run the following command to install the Canpack CLI on your global system path:
 npm install -g canpack
 ```
 
-## Quick Start (Mops)
+## Quick Start (Motoko + Rust)
 
 Canpack has built-in support for the [Mops](https://mops.one/) package manager. 
 
@@ -29,13 +29,25 @@ canpack-example-hello = "^0.1"
 local-crate = { path = "path/to/local-crate" }
 ```
 
+You can also specify `[rust-dependencies]` in a Motoko package's `mops.toml` file to include Rust crates in any downstream canisters.
+
 Next, run the following command in the directory with the `mops.toml` and `dfx.json` files:
 
 ```bash
 canpack
 ```
 
-This will configure and generate a `motoko_rust` canister with Candid bindings for the specified dependencies.
+This will configure and generate a `motoko_rust` canister with Candid bindings for the specified dependencies. Here is a Motoko canister which uses a function defined in the [`canpack-example-hello`](https://docs.rs/canpack-example-hello/latest/src/canpack_example_hello/lib.rs.html) crate:
+
+```motoko
+import Rust "canister:motoko_rust";
+
+actor {
+    public composite query func hello(name: Text) : async Text {
+        await Rust.canpack_example_hello(name)
+    } 
+}
+```
 
 Any Rust crate with Canpack compatibility can be specified as a standard [`Cargo.toml` dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html). See the [Rust Crates](#rust-crates) section for more details.
 
@@ -71,6 +83,12 @@ await canpack(directory, config);
 ```
 
 ## Advanced Usage
+
+Pass the `-v` or `--verbose` flag to view the resolved JSON configuration for a project:
+
+```bash
+canpack --verbose
+```
 
 Below is a step-by-step guide for setting up a `dfx` project with a `canpack.json` config file. The goal here is to illustrate how one could use Canpack without additional tools such as Mops, which is specific to the Motoko ecosystem. 
 
