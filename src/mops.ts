@@ -1,5 +1,6 @@
 import TOML from '@iarna/toml';
 import { readFile } from 'fs/promises';
+import { installAll } from 'ic-mops/dist/commands/install-all.js';
 import {
   formatDir,
   formatGithubDir,
@@ -9,6 +10,7 @@ import { resolvePackages } from 'ic-mops/dist/resolve-packages.js';
 import { join, relative, resolve } from 'path';
 import { CanisterConfig, RustConfig, RustDependency } from './config.js';
 import { exists, jsonEqual } from './util.js';
+import chalk from 'chalk';
 
 interface MopsConfig {
   package?: {
@@ -26,9 +28,9 @@ interface MopsRustDependency extends RustDependency {
   [mopsPathSymbol]?: string;
 }
 
-export const loadMopsCanisters = async (): Promise<
-  Record<string, CanisterConfig> | undefined
-> => {
+export const loadMopsCanisters = async (
+  verbose: boolean,
+): Promise<Record<string, CanisterConfig> | undefined> => {
   const baseDirectory = '.'; // Mops currently only supports CWD in `resolvePackages()`
 
   const canisters: Record<string, CanisterConfig> = {};
@@ -41,6 +43,8 @@ export const loadMopsCanisters = async (): Promise<
   if (!mainDependencies) {
     return;
   }
+  console.log(chalk.grey('Installing Mops packages...'));
+  await installAll({ verbose, lock: 'ignore' });
   const dependencies = [...mainDependencies];
   const mopsPackages = await resolvePackages({ verbose: false });
 

@@ -31,7 +31,7 @@ if (directory) {
 (async () => {
   const directory = '.'; // Current working directory
 
-  const config = await loadConfig(directory);
+  const config = await loadConfig({directory, verbose});
   if (verbose) {
     config.verbose = true;
     console.log('Resolved configuration:');

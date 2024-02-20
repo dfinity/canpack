@@ -31,5 +31,5 @@ jobs:
       - run: npm test
       - name: Run CLI with `--version`
         run: bin/canpack.cjs --version
-      - name: Test dfx directory
+      - name: Run Canpack in `tests/dfx` directory
         run: npm run build && bin/canpack.cjs -D tests/dfx

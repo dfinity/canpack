@@ -34,7 +34,15 @@ export const configSchema = JSON.parse(
 
 const ajv = new Ajv();
 
-export const loadConfig = async (directory: string): Promise<Config> => {
+interface LoadConfigArgs {
+  directory: string;
+  verbose: boolean;
+}
+
+export const loadConfig = async ({
+  directory,
+  verbose,
+}: LoadConfigArgs): Promise<Config> => {
   // canpack.json
   const configPath = join(directory, 'canpack.json');
   const config: Config = (await exists(configPath))
@@ -46,7 +54,7 @@ export const loadConfig = async (directory: string): Promise<Config> => {
     throw new Error(JSON.stringify(validate.errors, null, 2));
   }
   // mops.toml
-  const mopsCanisters = await loadMopsCanisters();
+  const mopsCanisters = await loadMopsCanisters(verbose);
   if (mopsCanisters) {
     config.canisters = { ...mopsCanisters, ...config.canisters };
   }
