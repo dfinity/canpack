@@ -117,8 +117,8 @@ export const generate = async (config: Config): Promise<string[]> => {
         await readFile(cargoTomlPath, 'utf8'),
       );
       const missingMembers = rustProjects
-        .filter(([name]) => !cargoToml?.workspace?.members?.includes(name))
-        .map(([name]) => getMemberPath(name));
+        .map(([name]) => getMemberPath(name))
+        .filter((path) => !cargoToml?.workspace?.members?.includes(path));
       if (missingMembers.length) {
         console.log(
           chalk.yellow(
