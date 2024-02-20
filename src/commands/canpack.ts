@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { program } from 'commander';
 import { loadConfig } from '../config.js';
 import { canpack } from '../index.js';
+import { moduleRelative } from '../util.js';
 
 const { verbose, directory, version } = program
   .name('canpack')
@@ -12,7 +13,10 @@ const { verbose, directory, version } = program
   .opts();
 
 if (version) {
-  console.log('canpack', require('../../package.json').version);
+  console.log(
+    'canpack',
+    JSON.parse(moduleRelative(import.meta, '../../package.json')).version,
+  );
   process.exit(0);
 }
 
