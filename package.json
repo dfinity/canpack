@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "canpack": "bin/canpack.js"
+    "canpack": "bin/canpack.cjs"
   },
   "repository": {
     "type": "git",
