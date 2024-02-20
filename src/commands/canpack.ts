@@ -20,6 +20,7 @@ if (directory) {
   process.chdir(directory);
 }
 
+// tslint:disable-next-line
 (async () => {
   const directory = '.'; // Current working directory
 

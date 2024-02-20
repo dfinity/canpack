@@ -19,6 +19,7 @@
     "build": "rimraf ./lib && tsc -p .",
     "prepare": "husky install",
     "generate": "node utils/generate",
+    "lint": "tslint --project tsconfig.json",
     "test": "jest",
     "package": "rimraf ./pkg && run-s build test package:pkg package:zip",
     "package:pkg": "pkg -t node18-linux,node18-win,node18-macos lib/commands/mo-dev.js -o pkg/mo-dev",
@@ -51,11 +52,15 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tslint": "^6.1.3",
     "typescript": "^5.3.3"
   },
   "lint-staged": {
-    "{lib,contrib,utils}/**/*.{js,ts,jsx,tsx}": [
+    "{bin,src,lib,common}/**/*.{js,ts,jsx,tsx,json}": [
       "prettier --write"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "npm run lint"
     ]
   },
   "directories": {

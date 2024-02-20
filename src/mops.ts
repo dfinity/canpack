@@ -42,9 +42,10 @@ export const loadMopsCanisters = async (): Promise<
       } else {
         throw new Error(`Unknown dependency type: ${type}`);
       }
-      addMopsRustDependencies(directory, baseDirectory, rustConfig);
+      await addMopsRustDependencies(directory, baseDirectory, rustConfig);
     }),
   );
+
   return canisters;
 };
 
