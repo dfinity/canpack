@@ -185,8 +185,8 @@ fn export_macro(input: TokenStream) -> syn::Result<TokenStream> {
         };
         canpack_output = quote! {
             #canpack_output
-            #[::ic_cdk::#ic_cdk_attr]
-            #[::candid::candid_method(#candid_mode)]
+            #[ic_cdk::#ic_cdk_attr]
+            #[candid::candid_method(#candid_mode)]
             #fn_sig_rename {
                 $crate::#fn_name(#fn_args)
             }
