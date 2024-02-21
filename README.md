@@ -1,6 +1,6 @@
 # `canpack` &nbsp; [![npm version](https://img.shields.io/npm/v/canpack.svg?logo=npm&color=default)](https://www.npmjs.com/package/canpack) [![GitHub license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Canpack is a code generation tool which simplifies cross-language communication in [Internet Computer](https://internetcomputer.org/) canisters (such as calling a [Rust](https://www.rust-lang.org/) crate from [Motoko](https://github.com/dfinity/motoko)).
+Canpack is a code generation tool which simplifies cross-language communication in [Internet Computer](https://internetcomputer.org/) canisters (such as calling a [Rust](https://www.rust-lang.org/) crate from [Motoko](https://github.com/dfinity/motoko)). This works by generating a separate canister from the host language, combining fragments defined across multiple libraries.
 
 **Note:** This project is early in development; unannounced breaking changes may occur at any time.
 
