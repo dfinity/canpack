@@ -1,6 +1,6 @@
 import TOML from '@iarna/toml';
 import { readFile } from 'fs/promises';
-import { installAll } from 'ic-mops/dist/commands/install-all.js';
+import { installAll } from 'ic-mops/dist/commands/install/install-all.js';
 import {
   formatDir,
   formatGithubDir,
