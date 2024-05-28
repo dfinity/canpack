@@ -5,7 +5,7 @@ import { mkdirp } from 'mkdirp';
 import { join, resolve } from 'path';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
-import { Config } from './config.js';
+import { Config, RustDependency } from './config.js';
 import { exists, moduleRelative } from './util.js';
 import chalk from 'chalk';
 
@@ -38,6 +38,8 @@ const replaceInFile = async (
   });
   await writeFile(path, content);
 };
+
+const getPartIdentifier = (part: RustDependency, i: number) => `part_${i}`;
 
 export const generate = async (config: Config): Promise<string[]> => {
   const changes = [];
@@ -162,7 +164,7 @@ export const generate = async (config: Config): Promise<string[]> => {
               .map((part, i) =>
                 TOML.stringify({
                   dependencies: {
-                    [`part_${i}`]:
+                    [getPartIdentifier(part, i)]:
                       typeof part === 'string'
                         ? part
                         : {
@@ -182,7 +184,7 @@ export const generate = async (config: Config): Promise<string[]> => {
           [
             '// __parts__',
             canisterConfig.parts
-              .map((part, i) => `part_${i}::canpack!();`)
+              .map((part, i) => `${getPartIdentifier(part, i)}::canpack!();`)
               .join('\n'),
           ],
         ]);
